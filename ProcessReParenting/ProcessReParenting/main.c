@@ -84,4 +84,9 @@ void main(int argc, char** argv)
 		DeleteProcThreadAttributeList(lpAttributeList);
 		HeapFree(GetProcessHeap(), 0, lpAttributeList);
 	}
+
+	if (fSuccess)
+	{
+		CloseHandle(hExplorer);
+	}
 }
