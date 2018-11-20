@@ -1,4 +1,7 @@
 .vs
+Debug
+Release
+bin
 
 # Prerequisites
 *.d
