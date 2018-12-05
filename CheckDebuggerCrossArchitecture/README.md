@@ -4,7 +4,7 @@ This project was created to verify if a debugger is attached by executing code i
 The idea behind the project is nothing new and in the source code you will find the references to the external projects. It is very simple, if it detects a _debugger_ the process exits with code _1_. If no _debugger_ are detected it exits with code _0_.
 
 # Test case
-In the following image you can see an example of execution of the program and it resulting exit code set to _0_.
+In the following image you can see an example of execution of the program and its resulting exit code set to _0_.
 
 <img src="https://raw.githubusercontent.com/enkomio/media/master/CheckDebuggerCrossArchitecture/NormalExitProcess.png">
 
