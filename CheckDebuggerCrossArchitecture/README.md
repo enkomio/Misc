@@ -22,7 +22,7 @@ the result of the execution is visible in the following image:
 
 Now, in theory, the exit code should be _0_, but if you run the code until the breakpoint you will see that the exit code is still _1_ (surprise!).
 
-# Building the code
+# Build the code
 The project is written in _Assembly_ with Visual Studio 2017, it compiles in both x64 and x86. To create the final program I first compiled it in x64, then I dumped the resulting binary code and copied it, as raw data, in the x86 code.
 
 A pre-compiled binary is found <a href="https://github.com/enkomio/media/blob/master/CheckDebuggerCrossArchitecture/CheckDebuggerCrossArchitecture.exe">here</a>
