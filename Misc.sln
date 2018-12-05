@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProcessReParenting", "Proce
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "C projects", "C projects", "{9BFF5ED0-FE57-4E12-B0D7-41E72E56300A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ASM projects", "ASM projects", "{5A9A0DBB-EAA0-4B38-A283-721C713981EC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CheckDebuggerCrossArchitecture", "CheckDebuggerCrossArchitecture\CheckDebuggerCrossArchitecture\CheckDebuggerCrossArchitecture.vcxproj", "{99E8121B-86DF-4DB9-A977-85E047C57C16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,12 +27,21 @@ Global
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Release|x64.Build.0 = Release|x64
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Release|x86.ActiveCfg = Release|Win32
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Release|x86.Build.0 = Release|Win32
+		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Debug|x64.ActiveCfg = Debug|x64
+		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Debug|x64.Build.0 = Debug|x64
+		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Debug|x86.ActiveCfg = Debug|Win32
+		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Debug|x86.Build.0 = Debug|Win32
+		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Release|x64.ActiveCfg = Release|x64
+		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Release|x64.Build.0 = Release|x64
+		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Release|x86.ActiveCfg = Release|Win32
+		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923} = {9BFF5ED0-FE57-4E12-B0D7-41E72E56300A}
+		{99E8121B-86DF-4DB9-A977-85E047C57C16} = {5A9A0DBB-EAA0-4B38-A283-721C713981EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {331766A8-FE3A-42B8-BBC8-448F580C1225}
