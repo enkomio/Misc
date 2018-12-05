@@ -32,5 +32,7 @@ This toy project may cause some problems if you don't know the theory behind it.
 
 # References
 [1] PEB - <a href="https://docs.microsoft.com/en-us/windows/desktop/api/winternl/ns-winternl-_peb">https://docs.microsoft.com/en-us/windows/desktop/api/winternl/ns-winternl-_peb</a>
+
 [2] WoW64_call.cpp - <a href="https://gist.github.com/Cr4sh/76b66b612a5d1dc2c614">https://gist.github.com/Cr4sh/76b66b612a5d1dc2c614</a>
+
 [3] Heaven's Gate: 64-bit code in 32-bit file - <a href="https://download.adamas.ai/dlbase/Stuff/VX%20Heavens%20Library/vrg16.html">https://download.adamas.ai/dlbase/Stuff/VX%20Heavens%20Library/vrg16.html</a>
