@@ -30,6 +30,9 @@ A pre-compiled binary is found <a href="https://github.com/enkomio/media/blob/ma
 # Conclusion
 This toy project may cause some problems if you don't know the theory behind it. Anyway, even if you don't want to mess around with patching and stuff like that, x64dbg offer a very handy option to bypass the check (it is your duty to find it :P).
 
+### Updates
+As pointed out in <a href="https://old.reddit.com/r/ReverseEngineering/comments/a3mdup/an_alternative_method_to_identify_a_debugger/eb7lizo/">this comment</a>, it is not stricly necessary to execute code in x64 to access PEB64, you can access it directly from x86 code.
+
 # References
 [1] PEB - <a href="https://docs.microsoft.com/en-us/windows/desktop/api/winternl/ns-winternl-_peb">https://docs.microsoft.com/en-us/windows/desktop/api/winternl/ns-winternl-_peb</a>
 
