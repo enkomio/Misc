@@ -1,5 +1,5 @@
 # IsDebuggerPresentEx
-This project was created to verify if a debugger is attached by executing code in x64 mode from a 32 bit process.
+This project was created to verify if a debugger is attached to the running process. This is done by reading the _BeingDebugged_ flag from _PEB_, the "tricky part" is that this is done by jumping from 32 bit to 64 bit by using Heaven's Gate.
 
 The idea behind the project is nothing new and in the source code you will find the references to the external projects. It is very simple, if it detects a _debugger_ the process exits with code _1_. If no _debugger_ are detected it exits with code _0_.
 
