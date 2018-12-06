@@ -33,6 +33,8 @@ This toy project may cause some problems if you don't know the theory behind it.
 ### Updates
 As pointed out in <a href="https://old.reddit.com/r/ReverseEngineering/comments/a3mdup/an_alternative_method_to_identify_a_debugger/eb7lizo/">this comment</a>, it is not stricly necessary to execute code in x64 to access PEB64, you can access it directly from x86 code.
 
+Just to make more clear that this technique is nothing new, <a href="https://github.com/LordNoteworthy/al-khaser/wiki/Anti-Debugging-Tricks">here is a link to the Al-Khaser project</a> that does this exact check to verify if a debugger is attached.
+
 # References
 [1] PEB - <a href="https://docs.microsoft.com/en-us/windows/desktop/api/winternl/ns-winternl-_peb">https://docs.microsoft.com/en-us/windows/desktop/api/winternl/ns-winternl-_peb</a>
 
