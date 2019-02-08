@@ -11,30 +11,52 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ASM projects", "ASM project
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CheckDebuggerCrossArchitecture", "CheckDebuggerCrossArchitecture\CheckDebuggerCrossArchitecture\CheckDebuggerCrossArchitecture.vcxproj", "{99E8121B-86DF-4DB9-A977-85E047C57C16}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".NET projects", ".NET projects", "{FF699F34-6955-4ED5-BE25-7EEE34DA149F}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WordsGenerator", "WordsGenerator\WordsGenerator.fsproj", "{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Debug|x64.ActiveCfg = Debug|x64
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Debug|x64.Build.0 = Debug|x64
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Debug|x86.ActiveCfg = Debug|Win32
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Debug|x86.Build.0 = Debug|Win32
+		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Release|Any CPU.ActiveCfg = Release|Win32
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Release|x64.ActiveCfg = Release|x64
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Release|x64.Build.0 = Release|x64
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Release|x86.ActiveCfg = Release|Win32
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923}.Release|x86.Build.0 = Release|Win32
+		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Debug|x64.ActiveCfg = Debug|x64
 		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Debug|x64.Build.0 = Debug|x64
 		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Debug|x86.ActiveCfg = Debug|Win32
 		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Debug|x86.Build.0 = Debug|Win32
+		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Release|Any CPU.ActiveCfg = Release|Win32
 		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Release|x64.ActiveCfg = Release|x64
 		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Release|x64.Build.0 = Release|x64
 		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Release|x86.ActiveCfg = Release|Win32
 		{99E8121B-86DF-4DB9-A977-85E047C57C16}.Release|x86.Build.0 = Release|Win32
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Debug|x64.Build.0 = Debug|Any CPU
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Debug|x86.Build.0 = Debug|Any CPU
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Release|x64.ActiveCfg = Release|Any CPU
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Release|x64.Build.0 = Release|Any CPU
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Release|x86.ActiveCfg = Release|Any CPU
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +64,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{92A41474-D19B-431D-B5DC-DB9A9B94E923} = {9BFF5ED0-FE57-4E12-B0D7-41E72E56300A}
 		{99E8121B-86DF-4DB9-A977-85E047C57C16} = {5A9A0DBB-EAA0-4B38-A283-721C713981EC}
+		{527EAE03-18D2-4C6C-B6A4-AEC268DB44CF} = {FF699F34-6955-4ED5-BE25-7EEE34DA149F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {331766A8-FE3A-42B8-BBC8-448F580C1225}
