@@ -1,6 +1,14 @@
 # Binary Analysis Frameworks
 This page is just a list fo available binary analysis frameworks. The idea come from this tweet: https://twitter.com/elvanderb/status/773442426203668481
 
+<hr/>
+
+B2R2 IR (LowUIR)
+	GitHub: https://github.com/B2R2-org/B2R2
+	IR: https://github.com/B2R2-org/B2R2/blob/master/src/BinIR/LowUIR.fs
+	Www: https://b2r2.org/
+	Paper: https://ruoyuwang.me/bar2019/pdfs/bar2019-final51.pdf
+
 LLVM IR:
 	FCD - http://zneak.github.io/fcd/2016/02/16/lifting-x86-code.html
 	MCSEMA - https://github.com/trailofbits/mcsema
@@ -56,6 +64,7 @@ REVEN:
 
 BinSec IR - DBA:
 	 http://binsec.gforge.inria.fr/
+	 GitHub: https://github.com/binsec/binsec
 
 SNOWMAN IR:
 	x86-64, arm
