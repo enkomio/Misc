@@ -3,6 +3,10 @@ A repository with simple projects created for testing/learning purpose.
 
 ## Current projects
 
+### Binary Analysis Frameworks
+A list of framework to do Binary Analysis:
+<a href="https://github.com/enkomio/Misc/tree/master/BinaryAnalysisFrameworksDoc">BinaryAnalysisFrameworksDoc</a>
+
 ### Process Re-Parenting
 <a href="https://github.com/enkomio/Misc/tree/master/ProcessReParenting">This project</a> creates a new process as a child of another process. 
 
