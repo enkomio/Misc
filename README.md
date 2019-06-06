@@ -3,6 +3,10 @@ A repository with simple projects created for testing/learning purpose.
 
 ## Current projects
 
+### hm0x14 CTF writeup
+
+<a href="https://github.com/enkomio/Misc/tree/master/Hm0x14Writeup">The code of the writeup for the Hackmeeting 0x14 reversing challenge</a>.
+
 ### Code Jam 2019
 The code that I wrote to pass the first round of the Google Code Jam 2019. <a href="https://github.com/enkomio/Misc/tree/master/CodeJam2019">The solution</a> contains only the solution out of four problems.
 
