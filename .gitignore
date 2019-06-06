@@ -2,6 +2,7 @@
 Debug
 Release
 bin
+packages/
 
 # Prerequisites
 *.d
@@ -11,6 +12,7 @@ bin
 *.ko
 *.obj
 *.elf
+*.cache
 
 # Linker output
 *.ilk
