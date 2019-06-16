@@ -9,6 +9,7 @@ This page is just a list fo available binary analysis frameworks. The idea come 
 * IR: https://github.com/B2R2-org/B2R2/blob/master/src/BinIR/LowUIR.fs
 * Www: https://b2r2.org/
 * Paper: https://ruoyuwang.me/bar2019/pdfs/bar2019-final51.pdf
+* Emulator: https://github.com/enkomio/Sojobo
 
 ### LLVM IR
 * FCD - http://zneak.github.io/fcd/2016/02/16/lifting-x86-code.html
