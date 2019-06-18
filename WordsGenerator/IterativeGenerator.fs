@@ -4,20 +4,20 @@ open System
 
 module IterativeGenerator =
 
-    let rec increment(buffer: Byte array, index: Int32, alphabet: String) =
+    let rec tryIncrement(buffer: Byte array, index: Int32, alphabet: String) =
         if index >= buffer.Length then 
             false
         else
             buffer.[index] <- buffer.[index] + 1uy
             if buffer.[index] >= byte alphabet.Length then            
                 buffer.[index] <- 0uy
-                increment(buffer, index + 1, alphabet)
+                tryIncrement(buffer, index + 1, alphabet)
             else
                 true
 
     let rec getPasswords(buffer: Byte array, alphabet: String) = seq {
         yield buffer
-        if increment(buffer, 0, alphabet) then
+        if tryIncrement(buffer, 0, alphabet) then
             yield! getPasswords(buffer, alphabet)
     }
 
