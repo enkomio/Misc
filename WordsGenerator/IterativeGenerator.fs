@@ -4,28 +4,28 @@ open System
 
 module IterativeGenerator =
 
-    let rec tryIncrement(buffer: Byte array, index: Int32, alphabet: String) =
-        if index >= buffer.Length then 
+    let rec tryIncrement(currentPassword: Byte array, index: Int32, alphabet: String) =
+        if index >= currentPassword.Length then 
             false
         else
-            buffer.[index] <- buffer.[index] + 1uy
-            if buffer.[index] >= byte alphabet.Length then            
-                buffer.[index] <- 0uy
-                tryIncrement(buffer, index + 1, alphabet)
+            currentPassword.[index] <- currentPassword.[index] + 1uy
+            if currentPassword.[index] >= byte alphabet.Length then            
+                currentPassword.[index] <- 0uy
+                tryIncrement(currentPassword, index + 1, alphabet)
             else
                 true
 
-    let rec getPasswords(buffer: Byte array, alphabet: String) = seq {
-        yield buffer
-        if tryIncrement(buffer, 0, alphabet) then
-            yield! getPasswords(buffer, alphabet)
+    let rec getPasswords(currentPassword: Byte array, alphabet: String) = seq {
+        yield currentPassword
+        if tryIncrement(currentPassword, 0, alphabet) then
+            yield! getPasswords(currentPassword, alphabet)
     }
 
     let generate(alphabet: String, passwordLength: Int32) =
         let mutable counter = 0
         for curLen=1 to passwordLength do
-            let buffer = Array.zeroCreate<Byte>(curLen)
-            getPasswords(buffer, alphabet)
+            let currentPassword = Array.zeroCreate<Byte>(curLen)
+            getPasswords(currentPassword, alphabet)
             |> Seq.map(fun buffer -> buffer |> Seq.map(fun b -> alphabet.[int32 b]))
             |> Seq.map(fun pwdChars -> new String(pwdChars |> Seq.toArray |> Array.rev))
             |> Seq.iter(fun pwd -> 
