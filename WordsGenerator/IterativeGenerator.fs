@@ -4,9 +4,6 @@ open System
 
 module IterativeGenerator =
 
-    let getNumOfPasswords(alphabet: String, length: Int32) =
-        Math.Pow(float alphabet.Length, float length)
-        
     let rec increment(buffer: Byte array, index: Int32, alphabet: String) =
         if index >= buffer.Length then 
             false
