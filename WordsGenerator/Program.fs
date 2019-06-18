@@ -1,18 +1,14 @@
-﻿let alphabet = "ABCD"
+﻿namespace ES.WordsGenerator
 
-let rec generate(str, len) =
-    alphabet
-    |> Seq.map(fun c ->
-        let newString = str + c.ToString()
-        if newString.Length > len 
-        then [newString] :> string seq
-        else generate(newString, len)
-    )
-    |> Seq.concat
+open System
 
-[<EntryPoint>]
-let m _ = 
-    for i=0 to alphabet.Length-1 do
-        generate("", i) 
-        |> Seq.iter(printfn "%s")
-    0
+module Program =
+    [<EntryPoint>]
+    let main _ = 
+        Console.WriteLine("-=[ Start Recursive Generation ]=-")
+        RecursiveGenerator.generate("ABCD", 4)
+        Console.WriteLine("-=[ End Recursive Generation ]=-")
+        Console.WriteLine("-=[ Start Iterative Generation ]=-")
+        IterativeGenerator.generate("ABCD", 4)
+        Console.WriteLine("-=[ End Iterative Generation ]=-")
+        0
