@@ -4,21 +4,23 @@ open System
 
 module IterativeGenerator =
 
-    let rec tryIncrement(currentPassword: Byte array, index: Int32, alphabet: String) =
-        if index >= currentPassword.Length then 
-            false
-        else
-            currentPassword.[index] <- currentPassword.[index] + 1uy
-            if currentPassword.[index] >= byte alphabet.Length then            
-                currentPassword.[index] <- 0uy
-                tryIncrement(currentPassword, index + 1, alphabet)
-            else
-                true
+    let increment(currentPassword: Byte array, alphabet: String) =
+        let mutable incrementNext = true        
+        for i=0 to currentPassword.Length-1 do
+            if incrementNext then
+                currentPassword.[i] <- currentPassword.[i] + 1uy
+                if currentPassword.[i] >= byte alphabet.Length then            
+                    currentPassword.[i] <- 0uy
+                else
+                    incrementNext <- false
 
-    let rec getPasswords(currentPassword: Byte array, alphabet: String) = seq {
-        yield currentPassword
-        if tryIncrement(currentPassword, 0, alphabet) then
-            yield! getPasswords(currentPassword, alphabet)
+    let getNumOfPasswords(alphabet: String, length: Int32) =
+        Math.Pow(float alphabet.Length, float length) |> int32
+
+    let rec getPasswords(currentPassword: Byte array, alphabet: String) = seq {        
+        for i=0 to getNumOfPasswords(alphabet, currentPassword.Length)-1 do
+            yield currentPassword
+            increment(currentPassword, alphabet)
     }
 
     let generate(alphabet: String, passwordLength: Int32) =
