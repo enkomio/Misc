@@ -7,11 +7,15 @@ open System.Security.Cryptography
 open System.Reflection
 open SsdeepNET
 
+type Hash = {
+    Sha1: String
+    Ssdeep: String
+}
+
 type File = {
     FullPath: String
     Name: String
-    Hash: String   
-    Ssdeep: String
+    Hash: Hash
     Length: Int32
 } 
 
@@ -35,15 +39,28 @@ let toSHA1(buffer: Byte array) =
 let ssdeep(buffer: Byte array) =
     Hasher.HashBuffer(buffer, buffer.Length)
 
+let hash(content: Byte array) = {
+    Sha1 = toSHA1(content)
+    Ssdeep = ssdeep(content)
+}
+
+let compare(file1: File, file2: File) =
+    try
+        // this is necessary to bypass an error in compare
+        if file1.Hash.Ssdeep.Equals(file2.Hash.Ssdeep, StringComparison.OrdinalIgnoreCase) then Some 100
+        elif file1.Length = 0 || file2.Length = 0 then Some 0
+        else Comparer.Compare(file1.Hash.Ssdeep, file2.Hash.Ssdeep) |> Some
+    with _ ->
+        None
+
 let scanDirectory(directory: String) =
     if File.GetAttributes(directory).HasFlag(FileAttributes.Directory) then
         Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories)
         |> Array.map(fun file -> (file, File.ReadAllBytes(file)))
         |> Array.map(fun (file, content) -> {
             FullPath = file
-            Name = Regex.Replace(file, "$" + Regex.Escape(directory), String.Empty).Trim('.').Trim(Path.DirectorySeparatorChar)
-            Hash = toSHA1(content)
-            Ssdeep = ssdeep(content)
+            Name = Regex.Replace(file, "^" + Regex.Escape(directory), String.Empty).Trim('.').Trim(Path.DirectorySeparatorChar)            
+            Hash = hash(content)
             Length = content.Length
         })
         |> Array.sortBy(fun file -> file.Name)
@@ -52,19 +69,18 @@ let scanDirectory(directory: String) =
         [|{
             FullPath = directory
             Name = Path.GetFileName(directory).Trim('.').Trim(Path.DirectorySeparatorChar)
-            Hash = toSHA1(content)
-            Ssdeep = ssdeep(content)
+            Hash = hash(content)
             Length = content.Length
         }|]
 
 let computeDifferences(directory1: File array, directory2: File array) =
     let fileByName = directory2 |> Array.map(fun file -> (file.Name, file)) |> dict
-    let fileByHash = directory2 |> Array.map(fun file -> (file.Hash, file)) |> dict
+    let fileByHash = directory2 |> Array.map(fun file -> (file.Hash.Sha1, file)) |> dict
 
     directory1
     |> Array.map(fun file ->
         let sameName = fileByName.ContainsKey(file.Name)
-        let sameHash = fileByHash.ContainsKey(file.Hash)
+        let sameHash = fileByHash.ContainsKey(file.Hash.Sha1)
         (file, sameHash, sameName)
     )
     |> Array.filter(fun (_, sameHash, sameName) -> not (sameName && sameHash))
@@ -72,7 +88,7 @@ let computeDifferences(directory1: File array, directory2: File array) =
         if sameName then 
             (file, Some <| fileByName.[file.Name], DifferenceReason.DifferentHash)
         elif sameHash then
-            (file, Some <| fileByHash.[file.Hash], DifferenceReason.DifferentName)
+            (file, Some <| fileByHash.[file.Hash.Sha1], DifferenceReason.DifferentName)
         else 
             (file, None, DifferenceReason.New)
     )
@@ -82,9 +98,7 @@ let computeDifferences(directory1: File array, directory2: File array) =
             File2 = file2
             Comparison = 
                 match file2 with
-                | Some file2 -> 
-                    // this is necessary to bypass an error in compare
-                    Comparer.Compare(file1.Ssdeep, file2.Ssdeep) |> Some
+                | Some file2 -> compare(file1, file2)                    
                 | None -> None
             Reason = reason
         }
@@ -92,42 +106,68 @@ let computeDifferences(directory1: File array, directory2: File array) =
 
 let printResult (dir1: String) (dir1File: File array) (dir2: String) (dir2File: File array) (difference: Difference array) =
     Console.WriteLine("Files present in '{0}' (#{1}) and not in '{2}' (#{3}): #{4}", dir1, dir1File.Length, dir2, dir2File.Length, difference.Length)
-    Console.WriteLine()
+    Console.WriteLine()    
 
-    difference
-    |> Array.groupBy(fun difference -> difference.Reason)
-    |> Array.sortBy(fun (reason, _) ->
-        match reason with
-        | DifferenceReason.New -> 0
-        | DifferenceReason.DifferentHash -> 1
-        | DifferenceReason.DifferentName -> 2
+    let differences =
+        difference
+        |> Array.groupBy(fun difference -> difference.Reason)
+        |> Array.sortBy(fun (reason, _) ->
+            match reason with
+            | DifferenceReason.New -> 0
+            | DifferenceReason.DifferentHash -> 1
+            | DifferenceReason.DifferentName -> 2
+        )
+        |> Array.map(fun (_, array) ->
+            array
+            |> Array.sortByDescending(fun file ->
+                match file.Comparison with
+                | Some value -> value
+                | None -> 101
+            )
+        )
+
+    let extract(i: Int32) = if differences.Length > i then differences.[i] else Array.empty
+    let newFiles = extract(0)
+    let differentHasehs = extract(1)
+    let differentName = extract(2)
+
+    // print summary
+    Console.WriteLine("[++] Summary")
+    Console.WriteLine("New Files: #{0}", newFiles.Length)
+    Console.WriteLine("Files with difference hash: #{0}", differentHasehs.Length)
+    Console.WriteLine("Files that were moved: #{0}", differentName.Length)
+
+    // print new files
+    Console.WriteLine()  
+    Console.WriteLine("[+] New Files: #{0}", newFiles.Length)
+    newFiles
+    |> Array.iter(fun difference ->
+        Console.WriteLine("SHA-1: {0} - Len: {1} - File: {2}", difference.File1.Hash.Sha1, difference.File1.Length, difference.File1.Name)
     )
-    |> Array.iter(fun (reason, differences) ->
-        Console.WriteLine()
-        match reason with
-        | DifferenceReason.New -> Console.WriteLine("[+] New Files: #{0}", differences.Length)
-        | DifferenceReason.DifferentHash -> Console.WriteLine("[+] Files with difference hash: #{0}", differences.Length)
-        | DifferenceReason.DifferentName -> Console.WriteLine("[+] Files that were moved: #{0}", differences.Length)
 
-        differences 
-        |> Array.sortByDescending(fun file ->
-            match file.Comparison with
-            | Some value -> value
-            | None -> 101
-        )
-        |> Array.iter(fun difference ->
-            match difference.File2 with
-            | Some file2 ->
-                Console.WriteLine("File: {0} - Match: {1}%", difference.File1.Name, difference.Comparison.Value)
-                Console.WriteLine("File 1 SHA-1: {0}", difference.File1.Hash, file2.Hash)
-                Console.WriteLine("File 2 SHA-1: {0}", file2.Hash)
-                Console.WriteLine("File 1 SSDEEP: {0}", difference.File1.Ssdeep)
-                Console.WriteLine("File 2 SSDEEP: {0}", file2.Ssdeep)
-            | None ->
-                Console.WriteLine("File '{0}' sha-1: {1}", difference.File1.Name, difference.File1.Hash)
-            Console.WriteLine("+-----------------------------------------------+")
-        )
-    )    
+    // print different hash
+    Console.WriteLine()  
+    Console.WriteLine("[+] Files with difference hash: #{0}", differentHasehs.Length)
+    differentHasehs
+    |> Array.iter(fun difference ->
+        let file2 = difference.File2.Value
+        Console.WriteLine("File: {0} (Len 1: {1} - Len 2: {2}) - Match: {3}%", difference.File1.Name, difference.File1.Length, difference.File2.Value.Length, defaultArg difference.Comparison -1)
+        Console.WriteLine("File 1 SHA-1: {0},", difference.File1.Hash.Sha1)
+        Console.WriteLine("File 2 SHA-1: {0}", file2.Hash.Sha1)
+        Console.WriteLine("File 1 SSDEEP: {0}", difference.File1.Hash.Ssdeep)
+        Console.WriteLine("File 2 SSDEEP: {0}", file2.Hash.Ssdeep)
+        Console.WriteLine("+-----------------------------------------------+")
+    )
+
+    // print different names
+    Console.WriteLine()  
+    Console.WriteLine("[+] Files that were moved: #{0}", differentName.Length)
+    differentName
+    |> Array.iter(fun difference ->
+        Console.WriteLine("File 1: {0}", difference.File1.Name)
+        Console.WriteLine("File 2: {0}", difference.File2.Value.Name)
+        Console.WriteLine("+-----------------------------------------------+")
+    )
 
 let printBanner() =             
     let banner = "-=[ Comparison Tool ]=-"
