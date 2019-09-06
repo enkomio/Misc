@@ -163,6 +163,7 @@ let printResult (dir1: String) (dir1File: File array) (dir2: String) (dir2File: 
     Console.WriteLine()  
     Console.WriteLine("[+] Files that were moved: #{0}", differentName.Length)
     differentName
+    |> Array.filter(fun difference -> difference.File1.Length > 0)
     |> Array.iter(fun difference ->
         Console.WriteLine("File 1: {0}", difference.File1.Name)
         Console.WriteLine("File 2: {0}", difference.File2.Value.Name)
