@@ -1,4 +1,4 @@
-# Compare two directories and sho the files that differ
+# Compare two directories and show the files that differ
 
 ## Download
 
