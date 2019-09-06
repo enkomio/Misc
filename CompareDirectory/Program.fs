@@ -30,7 +30,7 @@ let computeDifferences(directory1: File array, directory2: File array) =
 
 let printSetResult(set: File Set) =
     set |> Set.iter(fun file ->
-        Console.WriteLine("File: {0} - SHA1: {1}", file.Path, file.Equals)
+        Console.WriteLine("File: {0} - SHA1: {1}", file.Path, file.Hash)
     )
 
 let printResult (dir1: String) (dir1File: File array) (dir2: String) (dir2File: File array) (set1MinusSet2, set2MinusSet1) =
@@ -43,7 +43,7 @@ let printResult (dir1: String) (dir1File: File array) (dir2: String) (dir2File: 
 
 [<EntryPoint>]
 let main argv = 
-    if argv.Length <> 2 then
+    if argv.Length < 3 then
         Console.WriteLine("Usage: {0} <directory1> <directory2>", Path.GetFileName(Assembly.GetEntryAssembly().Location))
     else
         let directory1 = scanDirectory(argv.[0])
