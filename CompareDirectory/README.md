@@ -14,5 +14,5 @@ Compare.exe <dir 1> <dir 2>
 To create a single file, once compiled go to the output directory and run:
 
 ```
-ILRepack.exe /out:Compare.exe "CompareDirectory.exe" FSharp.Core.dll System.ValueTuple.dll
+ILRepack.exe /out:Compare.exe "CompareDirectory.exe" FSharp.Core.dll System.ValueTuple.dll SsdeepNET.dll
 ```
