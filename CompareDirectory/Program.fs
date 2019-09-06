@@ -43,7 +43,7 @@ let printResult (dir1: String) (dir1File: File array) (dir2: String) (dir2File: 
 
 [<EntryPoint>]
 let main argv = 
-    if argv.Length < 3 then
+    if argv.Length < 2 then
         Console.WriteLine("Usage: {0} <directory1> <directory2>", Path.GetFileName(Assembly.GetEntryAssembly().Location))
     else
         let directory1 = scanDirectory(argv.[0])
