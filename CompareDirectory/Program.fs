@@ -32,6 +32,9 @@ let toSHA1(buffer: Byte array) =
     let hash = sha1.ComputeHash(buffer)
     BitConverter.ToString(hash).Replace("-", String.Empty)
 
+let ssdeep(buffer: Byte array) =
+    Hasher.HashBuffer(buffer, buffer.Length)
+
 let scanDirectory(directory: String) =
     if File.GetAttributes(directory).HasFlag(FileAttributes.Directory) then
         Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories)
@@ -40,7 +43,7 @@ let scanDirectory(directory: String) =
             FullPath = file
             Name = Regex.Replace(file, "$" + Regex.Escape(directory), String.Empty).Trim('.').Trim(Path.DirectorySeparatorChar)
             Hash = toSHA1(content)
-            Ssdeep = Hasher.HashBuffer(content, content.Length)
+            Ssdeep = ssdeep(content)
             Length = content.Length
         })
         |> Array.sortBy(fun file -> file.Name)
@@ -50,7 +53,7 @@ let scanDirectory(directory: String) =
             FullPath = directory
             Name = Path.GetFileName(directory).Trim('.').Trim(Path.DirectorySeparatorChar)
             Hash = toSHA1(content)
-            Ssdeep = Hasher.HashBuffer(content, content.Length)
+            Ssdeep = ssdeep(content)
             Length = content.Length
         }|]
 

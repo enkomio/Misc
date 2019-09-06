@@ -1,0 +1,3 @@
+[submodule "ThirdPart/SsdeepNET"]
+	path = ThirdPart/SsdeepNET
+	url = https://github.com/kolos450/SsdeepNET
