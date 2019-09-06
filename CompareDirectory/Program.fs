@@ -83,7 +83,7 @@ let computeDifferences(directory1: File array, directory2: File array) =
         if sameName then 
             (file, Some <| fileByName.[file.Name], DifferenceReason.DifferentHash)
         elif sameHash then
-            (file, Some <| fileByHash.[file.Name], DifferenceReason.DifferentName)
+            (file, Some <| fileByHash.[file.Hash], DifferenceReason.DifferentName)
         else 
             (file, None, DifferenceReason.New)
     )
