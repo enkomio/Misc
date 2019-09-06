@@ -1,5 +1,10 @@
 # Compare two directories and sho the files that differ
 
+## Download
+
+You can download a pre-compiled binary from the <a href="https://github.com/enkomio/Misc/tree/master/CompareDirectory/Binary">Binary</a> directory.
+
+
 ## Usage
 
 CompareDirectory.exe <dir 1> <dir 2>
@@ -8,4 +13,6 @@ CompareDirectory.exe <dir 1> <dir 2>
 
 To create a single file, once compiled go to the output directory and run:
 
-```ILRepack.exe /out:Compare.exe "CompareDirectory.exe" FSharp.Core.dll System.ValueTuple.dll```
+```
+ILRepack.exe /out:Compare.exe "CompareDirectory.exe" FSharp.Core.dll System.ValueTuple.dll
+```
