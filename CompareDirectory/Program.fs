@@ -105,7 +105,7 @@ let computeDifferences(directory1: File array, directory2: File array) =
     )
 
 let printResult (dir1: String) (dir1File: File array) (dir2: String) (dir2File: File array) (difference: Difference array) =
-    Console.WriteLine("Files present in '{0}' (#{1}) and not in '{2}' (#{3}): #{4}", dir1, dir1File.Length, dir2, dir2File.Length, difference.Length)
+    Console.WriteLine("Files that differ from '{0}' (#{1}) and '{2}' (#{3}): #{4}", dir1, dir1File.Length, dir2, dir2File.Length, difference.Length)
     Console.WriteLine()    
 
     let differences =
