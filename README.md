@@ -3,8 +3,10 @@ A repository with simple projects created for testing/learning purpose.
 
 ## Current projects
 
-### hm0x14 CTF writeup
+### Compare two directories and show the files that differ
+<a href="https://github.com/enkomio/Misc/tree/master/CompareDirectory">Compare two directories and show the files that differ</a>
 
+### hm0x14 CTF writeup
 <a href="https://github.com/enkomio/Misc/tree/master/Hm0x14Writeup">The code of the writeup for the Hackmeeting 0x14 reversing challenge</a>.
 
 ### Code Jam 2019
