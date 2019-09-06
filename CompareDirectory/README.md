@@ -16,3 +16,5 @@ To create a single file, once compiled go to the output directory and run:
 ```
 ILRepack.exe /out:Compare.exe "CompareDirectory.exe" FSharp.Core.dll System.ValueTuple.dll SsdeepNET.dll
 ```
+
+You must have <a href="https://github.com/gluck/il-repack">ILRepack.exe</a> in the same directory.
