@@ -34,11 +34,11 @@ let printSetResult(set: File Set) =
     )
 
 let printResult (dir1: String) (dir1File: File array) (dir2: String) (dir2File: File array) (set1MinusSet2, set2MinusSet1) =
-    Console.WriteLine("File present in {0} [#{1}] and not in {2} [#{3}]", dir1, dir1File.Length, dir2, dir2File.Length)
+    Console.WriteLine("File present in {0} [#{1}] and not in {2} [#{3}]: #{4}", dir1, dir1File.Length, dir2, dir2File.Length, set1MinusSet2 |> Set.count)
     printSetResult(set1MinusSet2)
 
     Console.WriteLine()
-    Console.WriteLine("File present in {0} [#{1}] and not in {2} [#{3}]", dir2, dir2File.Length, dir1, dir1File.Length)
+    Console.WriteLine("File present in {0} [#{1}] and not in {2} [#{3}]: #{4}", dir2, dir2File.Length, dir1, dir1File.Length, set2MinusSet1 |> Set.count)
     printSetResult(set2MinusSet1)
 
 [<EntryPoint>]
