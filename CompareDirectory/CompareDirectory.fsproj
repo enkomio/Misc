@@ -25,7 +25,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DocumentationFile>bin\$(Configuration)\$(AssemblyName).XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
-    <StartArguments>C:\Users\s4tan\Downloads\d\314 C:\Users\s4tan\Downloads\d\312</StartArguments>
+    <StartArguments>C:\Users\s4tan\Downloads\comparer\b C:\Users\s4tan\Downloads\comparer\a</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
