@@ -4,7 +4,7 @@ A repository with simple projects created for testing/learning purpose.
 ## Current projects
 
 ### Compare two directories and show the files that differ
-<a href="https://github.com/enkomio/Misc/tree/master/CompareDirectory">Compare two directories and show the files that differ</a>
+<a href="https://github.com/enkomio/Misc/tree/master/CompareDirectory">This tool</a> will allows to compare two directories and show the files that differ according to different hashes, new files and if they were moved to another location. <a href="https://github.com/enkomio/Misc/blob/master/CompareDirectory/Binary/Compare.exe?raw=true">Download compiled binary</a>.
 
 ### hm0x14 CTF writeup
 <a href="https://github.com/enkomio/Misc/tree/master/Hm0x14Writeup">The code of the writeup for the Hackmeeting 0x14 reversing challenge</a>.
