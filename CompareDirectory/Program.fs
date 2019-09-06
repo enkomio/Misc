@@ -12,25 +12,9 @@ type File = {
     Name: String
     Hash: String   
     Ssdeep: String
+    Length: Int32
 } 
-(*
-with
-    override this.Equals(f: Object) =
-        match f with
-        | :? File as f ->
-            f.Name.Equals(this.Name, StringComparison.Ordinal)
-            && f.Hash.Equals(this.Hash, StringComparison.OrdinalIgnoreCase)
-        | _ -> false
 
-    override this.GetHashCode() =
-        this.Hash.GetHashCode()
-
-    interface IComparable with
-        member this.CompareTo(o: Object) =
-            match o with
-            | :? File as f -> StringComparer.CurrentCulture.Compare(f.Name, this.Name)
-            | _ -> 1
-          *)
 type DifferenceReason =
     | New
     | DifferentName
@@ -54,9 +38,10 @@ let scanDirectory(directory: String) =
         |> Array.map(fun file -> (file, File.ReadAllBytes(file)))
         |> Array.map(fun (file, content) -> {
             FullPath = file
-            Name = Regex.Replace(file, "$" + directory, String.Empty).Trim('.').Trim(Path.DirectorySeparatorChar)
+            Name = Regex.Replace(file, "$" + Regex.Escape(directory), String.Empty).Trim('.').Trim(Path.DirectorySeparatorChar)
             Hash = toSHA1(content)
             Ssdeep = Hasher.HashBuffer(content, content.Length)
+            Length = content.Length
         })
         |> Array.sortBy(fun file -> file.Name)
     else
@@ -66,6 +51,7 @@ let scanDirectory(directory: String) =
             Name = Path.GetFileName(directory).Trim('.').Trim(Path.DirectorySeparatorChar)
             Hash = toSHA1(content)
             Ssdeep = Hasher.HashBuffer(content, content.Length)
+            Length = content.Length
         }|]
 
 let computeDifferences(directory1: File array, directory2: File array) =
@@ -93,7 +79,9 @@ let computeDifferences(directory1: File array, directory2: File array) =
             File2 = file2
             Comparison = 
                 match file2 with
-                | Some file2 -> Comparer.Compare(file1.Ssdeep, file2.Ssdeep) |> Some
+                | Some file2 -> 
+                    // this is necessary to bypass an error in compare
+                    Comparer.Compare(file1.Ssdeep, file2.Ssdeep) |> Some
                 | None -> None
             Reason = reason
         }
