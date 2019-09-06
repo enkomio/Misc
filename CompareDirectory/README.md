@@ -7,7 +7,7 @@ You can download a pre-compiled binary from the <a href="https://github.com/enko
 
 ## Usage
 
-CompareDirectory.exe <dir 1> <dir 2>
+Compare.exe <dir 1> <dir 2>
 
 ## Pack
 
