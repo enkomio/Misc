@@ -1,0 +1,11 @@
+# Compare two directories and sho the files that differ
+
+## Usage
+
+CompareDirectory.exe <dir 1> <dir 2>
+
+## Pack
+
+To create a single file, once compiled go to the output directory and run:
+
+```ILRepack.exe /out:Compare.exe "CompareDirectory.exe" FSharp.Core.dll System.ValueTuple.dll```
