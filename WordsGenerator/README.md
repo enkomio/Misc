@@ -10,4 +10,4 @@ AB
 BA
 BB
 
-If you wonder why I created such project, it is just becasue I was bored and the implementation can be tricky to do :) I provide two types of implementation, the first one use a recursive algorithm and the second one use an iterative one (to be honest is not totally iterative, I use recursion in one case :P).
+If you wonder why I created such project, it is just becasue I was bored and the implementation can be tricky to do :) I provide two types of implementation, the first one use a recursive algorithm and the second one use an iterative one.
