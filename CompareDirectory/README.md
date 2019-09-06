@@ -12,7 +12,7 @@ C:\Compare.exe b a
 -=[ Comparison Tool ]=-
 Copyright (c) 2019 Enkomio
 
-Files present in 'b' (#64) and not in 'a' (#64): #6
+Files that differ from 'b' (#64) and 'a' (#64): #6
 
 [++] Summary
 New Files: #0
