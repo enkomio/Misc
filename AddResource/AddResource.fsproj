@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>794db1fe-9493-42f2-9ae0-6d2601bbba72</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>AddResource</RootNamespace>
+    <AssemblyName>AddResource</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <UseStandardResourceNames>true</UseStandardResourceNames>
+    <Name>AddResource</Name>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <Tailcalls>false</Tailcalls>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).XML</DocumentationFile>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <Tailcalls>true</Tailcalls>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).XML</DocumentationFile>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(FSharpTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets') ">
+    <FSharpTargetsPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets</FSharpTargetsPath>
+  </PropertyGroup>
+  <Import Project="$(FSharpTargetsPath)" />
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Program.fs" />
+    <None Include="App.config" />
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Argu">
+      <HintPath>..\packages\Argu.6.0.0\lib\netstandard2.0\Argu.dll</HintPath>
+    </Reference>
+    <Reference Include="ES.Fslog">
+      <HintPath>..\packages\FSharpLog.2.2.0\lib\ES.Fslog.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core">
+      <HintPath>..\packages\FSharp.Core.4.7.0\lib\net45\FSharp.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.ConfigurationManager">
+      <HintPath>..\packages\System.Configuration.ConfigurationManager.4.4.0\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.7.1' Or $(TargetFrameworkVersion) == 'v4.7.2')">
+      <ItemGroup>
+        <Reference Include="Argu">
+          <HintPath>..\packages\Argu\lib\netstandard2.0\Argu.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.7.1' Or $(TargetFrameworkVersion) == 'v4.7.2')">
+      <ItemGroup>
+        <Reference Include="FSharp.Core">
+          <HintPath>..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3' Or $(TargetFrameworkVersion) == 'v4.7' Or $(TargetFrameworkVersion) == 'v4.7.1' Or $(TargetFrameworkVersion) == 'v4.7.2')" />
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.7.1' Or $(TargetFrameworkVersion) == 'v4.7.2')">
+      <ItemGroup>
+        <Reference Include="System.Configuration">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Drawing">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Xml">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Configuration.ConfigurationManager">
+          <HintPath>..\packages\System.Configuration.ConfigurationManager\lib\net461\System.Configuration.ConfigurationManager.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.7.1' Or $(TargetFrameworkVersion) == 'v4.7.2')">
+      <ItemGroup>
+        <Reference Include="System.Security.AccessControl">
+          <HintPath>..\packages\System.Security.AccessControl\lib\net461\System.Security.AccessControl.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.7.1' Or $(TargetFrameworkVersion) == 'v4.7.2')">
+      <ItemGroup>
+        <Reference Include="System.Data">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Data.OracleClient">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Net">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Security">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.ServiceProcess">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Transactions">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="WindowsBase">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Security.Permissions">
+          <HintPath>..\packages\System.Security.Permissions\lib\net461\System.Security.Permissions.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.7.1' Or $(TargetFrameworkVersion) == 'v4.7.2')">
+      <ItemGroup>
+        <Reference Include="System.Security.Principal.Windows">
+          <HintPath>..\packages\System.Security.Principal.Windows\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+</Project>
