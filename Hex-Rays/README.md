@@ -7,3 +7,14 @@ In the <a href="https://github.com/enkomio/Misc/tree/master/Hex-Rays/main.asm">e
 The cause of the "problem" since to be the CMOVcc instruction.
 
 Tested on Hex-Rays decompiler v7.4.0.191112 (which for the record is an awesome product ^^)
+
+## Result
+
+<table>
+ <tr>
+  <td><img src="https://github.com/enkomio/Misc/blob/master/Hex-Rays/img1.png" width="200"></td>
+ </tr>
+ <tr>
+  <td><img src="https://github.com/enkomio/Misc/blob/master/Hex-Rays/img2.png" width="200"></td>
+ </tr>
+</table>
