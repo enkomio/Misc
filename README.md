@@ -3,6 +3,9 @@ A repository with simple projects created for testing/learning purpose.
 
 ## Current projects
 
+### Add resource to PE
+<a href="https://github.com/enkomio/Misc/tree/master/AddResource">This simple program</a> will add (or replace) a resource in a PE file.
+
 ### Compare two directories and show the files that differ
 <a href="https://github.com/enkomio/Misc/tree/master/CompareDirectory">This tool</a> will allows to compare two directories and show the files that differ according to different hashes, new files and if they were moved to another location. <a href="https://github.com/enkomio/Misc/blob/master/CompareDirectory/Binary/Compare.exe?raw=true">Download compiled binary</a>.
 
