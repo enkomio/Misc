@@ -3,6 +3,9 @@ A repository with simple projects created for testing/learning purpose.
 
 ## Current projects
 
+### Messing with Hex-Rays decompiler
+A <a href="https://github.com/enkomio/Misc/tree/master/Hex-Rays">simple project</a> that shows that putting a total trust in the decompiled code isn't always a good idea. Tested with Hex-Rays decompiler.
+
 ### Add resource to PE
 <a href="https://github.com/enkomio/Misc/tree/master/AddResource">This simple program</a> will add (or replace) a resource in a PE file.
 
