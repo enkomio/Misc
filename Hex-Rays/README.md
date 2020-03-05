@@ -8,13 +8,6 @@ The cause of the "problem" since to be the CMOVcc instruction.
 
 Tested on Hex-Rays decompiler v7.4.0.191112 (which for the record is an awesome product ^^)
 
-## Result
+## Video
 
-<table>
- <tr>
-  <td><img src="https://github.com/enkomio/Misc/blob/master/Hex-Rays/img1.png" width="200"></td>
- </tr>
- <tr>
-  <td><img src="https://github.com/enkomio/Misc/blob/master/Hex-Rays/img2.png" width="200"></td>
- </tr>
-</table>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LzDaOTOJkVU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
