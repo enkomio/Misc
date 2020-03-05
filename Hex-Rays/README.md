@@ -10,4 +10,4 @@ Tested on Hex-Rays decompiler v7.4.0.191112 (which for the record is an awesome 
 
 ## Video
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/LzDaOTOJkVU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Hiding code from Hex-Rays decompilation pseudo-code](http://i3.ytimg.com/vi/LzDaOTOJkVU/hqdefault.jpg)](https://www.youtube.com/embed/LzDaOTOJkVU)
