@@ -6,4 +6,4 @@ In the <a href="https://github.com/enkomio/Misc/tree/master/Hex-Rays/main.asm">e
 
 The cause of the "problem" since to be the CMOVcc instruction.
 
-Tested on Hex-Rays decompiler v7.4.0.191112
+Tested on Hex-Rays decompiler v7.4.0.191112 (which for the record is an awesome product ^^)
