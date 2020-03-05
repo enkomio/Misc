@@ -12,4 +12,4 @@ Tested on Hex-Rays decompiler v7.4.0.191112 (which for the record is an awesome 
 
 Click the image below to see a demo video.
 
-[![Hiding code from Hex-Rays decompilation pseudo-code](http://i3.ytimg.com/vi/LzDaOTOJkVU/hqdefault.jpg)](https://www.youtube.com/embed/LzDaOTOJkVU)
+[![Hiding code from Hex-Rays decompilation pseudo-code](http://i3.ytimg.com/vi/LzDaOTOJkVU/hqdefault.jpg)](https://www.youtube.com/watch?v=LzDaOTOJkVU)
