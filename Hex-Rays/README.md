@@ -8,6 +8,10 @@ The cause of the "problem" seems to be the CMOVcc instruction. However, I don't 
 
 Tested on Hex-Rays decompiler v7.4.0.191112 (which for the record is an awesome product ^^)
 
+## Update
+
+06/03/2020 - <a href="https://twitter.com/rolfrolles?lang=en">Rolf Rolles</a> <a href="https://www.reddit.com/r/ReverseEngineering/comments/fe41cy/hide_code_in_hexrays_decompiled_pseudocode/fjo188z?utm_source=share&utm_medium=web2x">commented</a> my reddit post, clarifying that this situation is correctly handled by Hex-Rays by specifying a custom calling convention: <i>void *__usercall func_a<edi>(bool in<zf>)</i>.
+
 ## Video
 
 Click the image below for a demo.
