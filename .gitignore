@@ -3,6 +3,7 @@ Debug
 Release
 bin
 packages/
+.fake/
 
 # Prerequisites
 *.d
