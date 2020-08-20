@@ -4,6 +4,7 @@ Release
 bin
 packages/
 .fake/
+fake/
 
 # Prerequisites
 *.d
