@@ -25,7 +25,6 @@ DEBUG = False
 def gen_rand(i):
 	if DEBUG:
 		print('*************************')
-		print('Seed: ' + hex(seed))
 		print('Addr: ' + hex(i))
 	a = (65793 * (i & 0xff)) & 0xffffffff
 	if DEBUG:

@@ -16,6 +16,7 @@ g_saved_code byte 20h dup(0h)
 
 ; bytes containing the content that is encrypted and temporary decrypted for execution
 g_encrypted_code_address dword 0h
+g_encrypted_code byte 0Fh dup(0h)
 
 g_start_protected_code dword 0h
 g_end_protected_code dword 0h
@@ -25,8 +26,6 @@ g_end_protected_code dword 0h
 include <common.inc>
 include <utility.inc>
 include <obfuscation.inc>
-
-size_code_to_encrypt_decrypt equ 0fh
 
 enable_trap_flag macro	
 	pushfd
@@ -78,6 +77,9 @@ restore_bytes proc
 	; restore bytes overwritten by enable trap code
 	mem_copy offset g_saved_code, edi, enable_trap_flag_proc_size
 
+	; restore bytes temporarly decrypted
+	mem_copy offset g_encrypted_code, dword ptr [g_encrypted_code_Address], sizeof g_encrypted_code
+
 @exit:
 	mov esp, ebp
 	pop ebp
@@ -116,8 +118,12 @@ decrypt_code proc
 	mov ebp, esp
 	sub esp, sizeof dword
 
-	; decrypt the code
-	mov ecx, size_code_to_encrypt_decrypt
+	; save encrypted bytes in buffer and initialize routines
+	mem_copy dword ptr [ebp+arg0], offset g_encrypted_code, sizeof g_encrypted_code
+	call init_routine_array
+
+	; deobfuscate the code
+	mov ecx, sizeof g_encrypted_code
 	mov esi, dword ptr [ebp+arg0]
 	mov dword ptr [g_encrypted_code_address], esi
 
@@ -137,35 +143,6 @@ decrypt_code proc
 decrypt_code endp
 
 ;
-; Encrypt back the executed code. Since the seed is changed, the encryption will be different
-;
-encrypt_code proc
-	push ebp
-	mov ebp, esp
-
-	cmp dword ptr [g_encrypted_code_address], 0h
-	je @exit
-
-	; encrypt the code
-	mov ecx, size_code_to_encrypt_decrypt
-	mov esi, dword ptr [g_encrypted_code_address]	
-@@:
-	push ecx
-	push esi
-	call obfuscate
-	mov byte ptr [esi], al
-	inc esi
-	add esp, 4
-	pop ecx
-	loop @B
-
-@exit:
-	mov esp, ebp
-	pop ebp
-	ret
-encrypt_code endp
-
-;
 ; handle the trap exception
 ; Parameter: CONTEXT
 ;
@@ -175,9 +152,6 @@ trap_handler proc
 
 	; replace previous instructions
 	call restore_bytes
-
-	; encrypt again the code
-	call encrypt_code
 
 	; obtains the instruction causing the fault
 	mov ebx, [ebp+arg0]
