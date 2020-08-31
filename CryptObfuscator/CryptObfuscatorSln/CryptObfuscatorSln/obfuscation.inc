@@ -1,15 +1,26 @@
 ;
-; generate random number used to obfuscate/deobfuscate
-; Parameters: address of the instruction to obfuscate/deobfuscate
+; generate a random number used to deobfuscate
+; Parameters: address of the instruction to deobfuscate
 ;
 gen_random proc
 	push ebp
 	mov ebp, esp
-
+	
 	movzx eax, byte ptr [ebp+arg0]
 	mov edx, 010101h
 	mul edx
 	add eax, 415927h
+
+	popcnt ecx, eax
+	test byte ptr [ebp+arg0], 1h
+	jz @f
+	ror al, cl
+	jmp @exit
+@@:
+	rol al, cl
+
+@exit:
+	and eax, 0ffh
 	mov ecx, 0ah
 	xor edx, edx
 	div ecx
@@ -19,6 +30,227 @@ gen_random proc
 	pop ebp
 	ret
 gen_random endp
+
+;
+; This function read the given entry in the array, set the "used" bit and update the array
+; Parameter: the index of the routine to read
+;
+get_routine_entry proc
+	push ebp
+	mov ebp, esp
+	
+	mov eax, dword ptr [ebp+arg0]
+	mov esi, offset g_deobfuscation_routines
+	lea edx, [esi + eax * sizeof dword]
+	mov eax, dword ptr [edx]
+	cmp eax, 0h
+	je @exit
+
+	; set entry and return result
+	bts eax, 0ffffffffh
+	mov dword ptr [edx], eax
+
+@exit:
+	mov esp, ebp
+	pop ebp
+	ret
+get_routine_entry endp
+
+;
+; Get the deobfuscation routine according to the given address
+; Parameter: the address to deobfuscate
+;
+get_routine proc
+	push ebp
+	mov ebp, esp
+	sub esp, 2 * sizeof dword
+
+	; generate and save random	
+	push dword ptr [ebp+arg0]
+	call gen_random 
+	mov dword ptr [ebp+local1], eax
+	add esp, 4
+
+	; update status	
+	; choose deobfuscation routine. If the first bit is not set the function 
+	; can be invoked. The bit is then set to 1 to ignore it the next time.
+	mov ecx, num_deobfuscation_routines
+	mov esi, offset g_deobfuscation_routines
+	lea edx, [esi + eax * sizeof dword]
+	
+@@:
+	mov eax, dword ptr [edx]	
+	cmp eax, 0h
+
+	; round index if necessary
+	cmove edx, esi
+	cmove eax, dword ptr [edx]
+
+	bts eax, 0ffffffffh
+	mov dword ptr [edx], eax
+	jnc @routine_found
+	add edx, sizeof dword
+	loop @B
+
+	; not routine available found, all array was traversed, need to re-initialize the array
+	push dword ptr [g_saved_start_protected_code]	
+	call init_routine_array
+	mov ecx, num_deobfuscation_routines	
+	mov eax, dword ptr [ebp+local1]
+	lea edx, [esi + eax * sizeof dword]
+	jmp @B
+
+@routine_found:
+	; clean the result and return the routine address
+	and eax, 7fffffffh
+
+	mov esp, ebp
+	pop ebp
+	ret
+get_routine endp
+
+;
+; Initialize the array containing the routines to deobfuscate
+; Parameter the address that will be deobfuscated next
+;
+init_routine_array proc
+	push ebp
+	mov ebp, esp
+	sub esp, 4 * sizeof dword
+
+	; save non volatile registers
+	mov dword ptr [ebp+local2], esi
+	mov dword ptr [ebp+local3], edi
+
+	; init array deobfuscation routines
+	mov edi, offset g_deobfuscation_routines
+	mov esi, offset @deobfuscation_routines
+	mov ecx, num_deobfuscation_routines
+	rep movsd
+	mov dword ptr [edi], 0h
+
+	; according to the input address must set the given routine as not available. 
+	; Start by computing the base address
+	mov eax, dword ptr [ebp+arg0]
+	sub eax, dword ptr [g_saved_start_protected_code]	
+	xor edx, edx
+	mov ebx, num_deobfuscation_routines
+	div ebx	
+
+	; check if there are routines to set
+	cmp edx, 0h
+	je @exit
+
+	; save reminder
+	mov ecx, edx
+
+	; compute base address
+	xor edx, edx
+	mov ebx, num_deobfuscation_routines
+	mul ebx
+	add eax, dword ptr [g_saved_start_protected_code]	
+	mov dword ptr [ebp+local0], eax
+
+	; set all routines to invoked
+@@:	
+	mov dword ptr [ebp+local1], ecx
+	push dword ptr [ebp+local0]
+	call get_routine
+	inc dword ptr [ebp+local0]
+	mov ecx, dword ptr [ebp+local1]
+	loop @B
+
+	jmp @exit
+
+@deobfuscation_routines:
+	dword offset deobfuscation0
+	dword offset deobfuscation1
+	dword offset deobfuscation2
+	dword offset deobfuscation3
+	dword offset deobfuscation4
+	dword offset deobfuscation5
+	dword offset deobfuscation6
+	dword offset deobfuscation7
+	dword offset deobfuscation8
+	dword offset deobfuscation9
+num_deobfuscation_routines equ ($ - @deobfuscation_routines) / sizeof dword
+
+@exit:
+	; restore registers
+	mov esi, dword ptr [ebp+local2] 
+	mov edi, dword ptr [ebp+local3] 
+
+	mov esp, ebp
+	pop ebp
+	ret
+init_routine_array endp
+
+;
+; deobfuscate the byte at the given address
+; Parameters: address of the byte to deobfuscate
+;
+deobfuscate proc
+	push ebp
+	mov ebp, esp
+	sub esp, 3 * sizeof dword
+
+	; save not volatile registers
+	mov dword ptr [ebp+local0], esi
+	mov dword ptr [ebp+local1], edi
+
+	; obtain the routine to invoke for the deobfuscation
+	push dword ptr [ebp+arg0]
+	call get_routine
+
+	; call the routine
+	push dword ptr [ebp+arg0]
+	call eax
+
+	; restore registers
+	mov esi, dword ptr [ebp+local0]
+	mov edi, dword ptr [ebp+local1] 
+
+	mov esp, ebp
+	pop ebp
+	ret
+deobfuscate endp
+
+;
+; Decrypt the instruction that must be executed
+; Parameters: Address of the instruction to decrypt
+;
+decrypt_code proc
+	push ebp
+	mov ebp, esp
+	sub esp, sizeof dword
+
+	; save encrypted bytes in buffer and initialize routines
+	mem_copy dword ptr [ebp+arg0], offset g_saved_encrypted_code, sizeof g_saved_encrypted_code
+		
+	; initialize the routines status
+	push dword ptr [ebp+arg0]
+	call init_routine_array
+
+	; deobfuscate the code
+	mov ecx, sizeof g_saved_encrypted_code
+	mov esi, dword ptr [ebp+arg0]
+	mov dword ptr [g_saved_encrypted_code_address], esi
+
+@@:
+	push ecx
+	push esi
+	call deobfuscate
+	mov byte ptr [esi], al
+	inc esi
+	add esp, 4
+	pop ecx
+	loop @B
+
+	mov esp, ebp
+	pop ebp
+	ret
+decrypt_code endp
+
 ;
 ; All deobfuscation routines take as parameter: address
 ;
@@ -180,111 +412,5 @@ deobfuscation9 proc
 	pop ebp
 	ret
 deobfuscation9 endp
-
-init_routine_array proc
-	push ebp
-	mov ebp, esp
-
-	; save non volatile registers
-	push esi
-	push edi
-
-	; init array deobfuscation routines
-	mov edi, offset g_deobfuscation_routines
-	mov esi, offset @deobfuscation_routines
-	mov ecx, num_deobfuscation_routines
-	rep movsd
-	mov dword ptr [edi], 0h
-
-	jmp @exit
-
-@deobfuscation_routines:
-	dword offset deobfuscation0
-	dword offset deobfuscation1
-	dword offset deobfuscation2
-	dword offset deobfuscation3
-	dword offset deobfuscation4
-	dword offset deobfuscation5
-	dword offset deobfuscation6
-	dword offset deobfuscation7
-	dword offset deobfuscation8
-	dword offset deobfuscation9
-num_deobfuscation_routines equ ($ - @deobfuscation_routines) / sizeof dword
-
-@exit:
-	; restore registers
-	pop edi
-	pop esi
-
-	mov esp, ebp
-	pop ebp
-	ret
-init_routine_array endp
-
-;
-; deobfuscate the byte at the given address
-; Parameters: address of the byte to deobfuscate
-;
-deobfuscate proc
-	push ebp
-	mov ebp, esp
-	sub esp, 3 * sizeof dword
-
-	; save not volatile registers
-	mov dword ptr [ebp+local0], esi
-	mov dword ptr [ebp+local1], edi
-
-	; check if the array must be initialized
-	mov eax, dword ptr [g_deobfuscation_routines]
-	test eax, eax
-	jnz @F
-	call init_routine_array
-@@:	
-
-	; gen pseud-random number that decides which routine to invoke
-	push dword ptr [ebp+arg0]
-	call gen_random
-	mov dword ptr [ebp+local2], eax
-
-	; choose deobfuscation routine. If the first bit is not set the function 
-	; can be invoked. The bit is then set to 1 to ignore it the next time.
-	mov ecx, num_deobfuscation_routines
-	mov esi, offset g_deobfuscation_routines
-	lea edx, [esi + eax * sizeof dword]
-	
-@@:
-	mov eax, dword ptr [edx]	
-	cmp eax, 0h
-
-	; round index if necessary
-	cmove edx, esi
-	cmove eax, dword ptr [edx]
-
-	bts eax, 0ffffffffh
-	mov dword ptr [edx], eax
-	jnc @choosed
-	add edx, sizeof dword
-	loop @B
-
-	; not routine available found, re-initialize the array
-	call init_routine_array
-	mov ecx, num_deobfuscation_routines	
-	mov eax, dword ptr [ebp+local2]
-	lea edx, [esi + eax * sizeof dword]
-	jmp @B
-
-@choosed:
-	and eax, 7fffffffh
-	push dword ptr [ebp+arg0]
-	call eax
-
-	; restore registers
-	mov esi, dword ptr [ebp+local0]
-	mov edi, dword ptr [ebp+local1] 
-
-	mov esp, ebp
-	pop ebp
-	ret
-deobfuscate endp
 	
 g_deobfuscation_routines dword num_deobfuscation_routines+1 dup(0h)

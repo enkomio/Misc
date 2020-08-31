@@ -20,13 +20,13 @@
     </MASM>
   </ItemGroup>
   <ItemGroup>
-    <None Include="common.inc">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="utility.inc">
       <Filter>Source Files</Filter>
     </None>
     <None Include="obfuscation.inc">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="model.inc">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

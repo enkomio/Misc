@@ -28,11 +28,22 @@ def gen_rand(i):
 		print('Addr: ' + hex(i))
 	a = (65793 * (i & 0xff)) & 0xffffffff
 	if DEBUG:
-		print('1: ' + hex(a))
+		print('A: ' + hex(a))
 	r = (a + 4282663) & 0xffffffff
 	if DEBUG:
-		print('Result: ' + hex(r))
-	r =  r % 0xa
+		print('B: ' + hex(r))
+	counts = bin(r).count("1")
+	if DEBUG:
+		print('Num of bits: ' + hex(counts))
+	if i % 2 == 0:
+		r = rol(r, counts, 8)
+		if DEBUG:
+			print('Result (ROL): ' + hex(r))
+	else:
+		r = ror(r, counts, 8)
+		if DEBUG:
+			print('Result (ROR): ' + hex(r))
+	r = r % 0xa
 	if DEBUG:
 		print('Result mod 0xA: ' + hex(r))
 	return r

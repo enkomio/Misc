@@ -15,15 +15,15 @@ g_saved_code_address dword 0h
 g_saved_code byte 20h dup(0h)
 
 ; bytes containing the content that is encrypted and temporary decrypted for execution
-g_encrypted_code_address dword 0h
-g_encrypted_code byte 0Fh dup(0h)
+g_saved_encrypted_code_address dword 0h
+g_saved_encrypted_code byte 0Fh dup(0h)
 
-g_start_protected_code dword 0h
-g_end_protected_code dword 0h
+g_saved_start_protected_code dword 0h
+g_saved_end_protected_code dword 0h
 
 .code
 
-include <common.inc>
+include <model.inc>
 include <utility.inc>
 include <obfuscation.inc>
 
@@ -78,7 +78,7 @@ restore_bytes proc
 	mem_copy offset g_saved_code, edi, enable_trap_flag_proc_size
 
 	; restore bytes temporarly decrypted
-	mem_copy offset g_encrypted_code, dword ptr [g_encrypted_code_Address], sizeof g_encrypted_code
+	mem_copy offset g_saved_encrypted_code, dword ptr [g_saved_encrypted_code_address], sizeof g_saved_encrypted_code
 
 @exit:
 	mov esp, ebp
@@ -110,39 +110,6 @@ set_trap_flag proc
 set_trap_flag endp
 
 ;
-; Decrypt the instruction that must be executed
-; Parameters: Address of the instruction to decrypt
-;
-decrypt_code proc
-	push ebp
-	mov ebp, esp
-	sub esp, sizeof dword
-
-	; save encrypted bytes in buffer and initialize routines
-	mem_copy dword ptr [ebp+arg0], offset g_encrypted_code, sizeof g_encrypted_code
-	call init_routine_array
-
-	; deobfuscate the code
-	mov ecx, sizeof g_encrypted_code
-	mov esi, dword ptr [ebp+arg0]
-	mov dword ptr [g_encrypted_code_address], esi
-
-@@:
-	push ecx
-	push esi
-	call deobfuscate
-	mov byte ptr [esi], al
-	inc esi
-	add esp, 4
-	pop ecx
-	loop @B
-
-	mov esp, ebp
-	pop ebp
-	ret
-decrypt_code endp
-
-;
 ; handle the trap exception
 ; Parameter: CONTEXT
 ;
@@ -159,9 +126,9 @@ trap_handler proc
 	mov eax, [ebx].rEip
 
 	; verify that EIP is inside the protected range
-	cmp eax, dword ptr [g_start_protected_code]
+	cmp eax, dword ptr [g_saved_start_protected_code]
 	jb @exit
-	cmp eax, dword ptr [g_end_protected_code]
+	cmp eax, dword ptr [g_saved_end_protected_code]
 	ja @exit	
 
 	; write enable trap
@@ -219,6 +186,12 @@ check_input proc
 	push ebp
 	mov ebp, esp
 
+	;mov ecx, 0aaah
+	;mov ebx, ecx
+	;mov edx, ebx
+	;mov esi, edx
+	;mov edi, esi
+	;mov eax, edi
 	mov eax, 0aaah
 
 	mov esp, ebp

@@ -53,7 +53,8 @@ find_protected_code proc
 	mov ebx, dword ptr [eax]
 	cmp ebx, marker_2
 	jne @b
-	mov [g_start_protected_code], eax
+	add eax, sizeof dword
+	mov dword ptr [g_saved_start_protected_code], eax
 	
 	pop eax
 @@: ; find end
@@ -65,7 +66,8 @@ find_protected_code proc
 	mov ebx, dword ptr [eax]
 	cmp ebx, marker_1
 	jne @b
-	mov [g_end_protected_code], eax
+	sub eax, sizeof dword
+	mov [g_saved_end_protected_code], eax
 
 	mov esp, ebp
 	pop ebp
