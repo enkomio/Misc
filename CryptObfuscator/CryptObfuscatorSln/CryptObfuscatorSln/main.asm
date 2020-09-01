@@ -18,14 +18,22 @@ g_saved_code byte 20h dup(0h)
 g_saved_encrypted_code_address dword 0h
 g_saved_encrypted_code byte 0Fh dup(0h)
 
+; constants used to mark the encrypted code
 g_saved_start_protected_code dword 0h
 g_saved_end_protected_code dword 0h
+
+; console strings
+g_insert_license db "Please enter your license key: ", 0h
+g_insert_username db "Please enter your ID: ", 0h
+g_wrong_result db "The inserted license is not valid!", 0h
 
 .code
 
 include <model.inc>
 include <utility.inc>
 include <obfuscation.inc>
+include <console.inc>
+include <validator.inc>
 
 enable_trap_flag macro	
 	pushfd
@@ -181,28 +189,33 @@ exception_handler proc
 	ret
 exception_handler endp
 
-start_protected_code_marker
-check_input proc
-	push ebp
-	mov ebp, esp
-
-	;mov ecx, 0aaah
-	;mov ebx, ecx
-	;mov edx, ebx
-	;mov esi, edx
-	;mov edi, esi
-	;mov eax, edi
-	mov eax, 0aaah
-
-	mov esp, ebp
-	pop ebp
-	ret
-check_input endp
-end_protected_code_marker
-
 main proc
 	push ebp
 	mov ebp, esp
+	sub esp, sizeof dword * 2
+
+	; make space for username and license
+	sub esp, 0ffh
+	mov dword ptr [ebp+local0], esp
+
+	sub esp, 0ffh
+	mov dword ptr [ebp+local1], esp
+
+	; read username
+	push offset [g_insert_username]
+	call print_line
+
+	push 0ffh
+	push dword ptr [ebp+local0]
+	call read_line
+	
+	; read license key
+	push offset [g_insert_license]
+	call print_line
+
+	push 0ffh
+	push dword ptr [ebp+local1]
+	call read_line	
 		
 	; unprotect all program memory
 	call unprotect_code
@@ -217,8 +230,12 @@ main proc
 	mov [fs:0], esp
 	assume fs:error
 
-	; enable trap flag and execute protected code
-	enable_trap_flag
+	; enable trap flag and execute obfuscated code
+	;enable_trap_flag
+
+	; check the username/license values
+	push dword ptr [ebp+local1]
+	push dword ptr [ebp+local0]
 	call check_input
 	
 	mov esp, ebp

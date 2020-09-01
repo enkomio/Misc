@@ -148,9 +148,11 @@
     </MASM>
   </ItemGroup>
   <ItemGroup>
+    <None Include="console.inc" />
     <None Include="model.inc" />
     <None Include="obfuscation.inc" />
     <None Include="utility.inc" />
+    <None Include="validator.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,8 +1,17 @@
+
+; import
 VirtualProtect proto, lpAddress:ptr dword, dwSize:dword, flNewProtect:dword, lpflOldProtect:ptr dword
+CloseHandle proto, nStdHandle:dword
+GetStdHandle proto, nStdHandle:dword
+WriteConsoleA proto, hConsoleInput:dword, lpBuffer:ptr byte, nNumberOfCharsToWrite:dword, lpNumberOfCharsWritten:ptr dword, lpReserved:dword
+ReadConsoleA proto, hConsoleInput:dword, lpBuffer:ptr byte, nNumberOfCharsToRead:dword, lpNumberOfCharsRead:ptr dword, pInputControl:ptr dword
 
 EXCEPTION_SINGLE_STEP equ 80000004h
 PAGE_EXECUTE_READWRITE equ 00000040h
+STD_INPUT_HANDLE equ -10
+STD_OUTPUT_HANDLE equ -11
 
+; helpful constants
 arg0 equ 8h
 arg1 equ 0Ch
 arg2 equ 10h

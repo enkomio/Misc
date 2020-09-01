@@ -29,5 +29,11 @@
     <None Include="model.inc">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="console.inc">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="validator.inc">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
