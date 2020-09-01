@@ -1,6 +1,13 @@
 comment !
-This is a simple proof of concept that uses the Trap Flag from the EFLAGS register to mantain
-and encrypted copy of the program during the execution.
+
+-=[ s4tanic0d3 ]=-
+
+After more than 10 years I decided to create another crackme, the third one. Enjoy :)
+
+You can find my previous crackme at:
+- http://crackmes.cf/users/s4tan/crackme1_s4tan/ (2009)
+- http://crackmes.cf/users/s4tan/s4tanic0de/ (2009)
+
 2020 (C) Antonio 's4tan' Parata
 !
 
@@ -9,6 +16,9 @@ and encrypted copy of the program during the execution.
 .stack 4096
 
 .data 
+
+; specify if the program must be traced
+g_is_trace_enabled dword 0h
 
 ; bytes containing the content that will be overwritten by the trap handler enabled
 g_saved_code_address dword 0h
@@ -35,7 +45,7 @@ include <obfuscation.inc>
 include <console.inc>
 include <validator.inc>
 
-enable_trap_flag macro	
+enable_trap_flag macro		
 	pushfd
 	or word ptr [esp], 100h
 	popfd
@@ -84,9 +94,15 @@ restore_bytes proc
 
 	; restore bytes overwritten by enable trap code
 	mem_copy offset g_saved_code, edi, enable_trap_flag_proc_size
+	mov dword ptr [g_saved_code_address], 0h
+
+	mov edi, dword ptr [g_saved_encrypted_code_address]
+	test edi, edi
+	jz @exit
 
 	; restore bytes temporarly decrypted
 	mem_copy offset g_saved_encrypted_code, dword ptr [g_saved_encrypted_code_address], sizeof g_saved_encrypted_code
+	mov dword ptr [g_saved_encrypted_code_address], 0h
 
 @exit:
 	mov esp, ebp
@@ -131,23 +147,34 @@ trap_handler proc
 	; obtains the instruction causing the fault
 	mov ebx, [ebp+arg0]
 	assume  ebx: ptr CONTEXT
-	mov eax, [ebx].rEip
-
-	; verify that EIP is inside the protected range
-	cmp eax, dword ptr [g_saved_start_protected_code]
-	jb @exit
-	cmp eax, dword ptr [g_saved_end_protected_code]
-	ja @exit	
-
-	; write enable trap
+	mov eax, [ebx].rEip	
 	push eax
-	call set_trap_flag
+
+	; write trap flag enabler and save the address of the overwritten bytes
+	cmp dword ptr [g_is_trace_enabled], 0h
+	jz @f
+	push eax
+	call set_trap_flag	
+
+@@:
+	; restore EIP value
+	pop eax
+
+	; verify that EIP is inside the protected range, if not does not decrypt	
+	cmp eax, dword ptr [g_saved_start_protected_code]
+	jb @do_not_decrypt
+	cmp eax, dword ptr [g_saved_end_protected_code]
+	ja @do_not_decrypt		
 
 	; decrypt code to execute
 	mov eax, [ebp+arg0]
 	assume  eax: ptr CONTEXT
 	push [eax].rEip
 	call decrypt_code
+
+@do_not_decrypt:
+	cmp dword ptr [g_saved_code_address], 0h
+	je @exit
 
 	; modify context EIP to point to the trap flag enabler
 	mov ebx, [ebp+arg0]
@@ -192,30 +219,31 @@ exception_handler endp
 main proc
 	push ebp
 	mov ebp, esp
+	max_input_length equ 20h
 	sub esp, sizeof dword * 2
 
 	; make space for username and license
-	sub esp, 0ffh
+	sub esp, max_input_length
 	mov dword ptr [ebp+local0], esp
 
-	sub esp, 0ffh
+	sub esp, max_input_length
 	mov dword ptr [ebp+local1], esp
 
 	; read username
 	push offset [g_insert_username]
 	call print_line
 
-	push 0ffh
-	push dword ptr [ebp+local0]
-	call read_line
+	;push max_input_length
+	;push dword ptr [ebp+local0]
+	;call read_line
 	
 	; read license key
 	push offset [g_insert_license]
 	call print_line
 
-	push 0ffh
-	push dword ptr [ebp+local1]
-	call read_line	
+	;push max_input_length
+	;push dword ptr [ebp+local1]
+	;call read_line	
 		
 	; unprotect all program memory
 	call unprotect_code
@@ -230,13 +258,15 @@ main proc
 	mov [fs:0], esp
 	assume fs:error
 
-	; enable trap flag and execute obfuscated code
-	;enable_trap_flag
+	; enable trap flag and execute obfuscated code that is inside marks
+	mov dword ptr [g_is_trace_enabled], 1h
+	enable_trap_flag
 
 	; check the username/license values
 	push dword ptr [ebp+local1]
 	push dword ptr [ebp+local0]
 	call check_input
+	mov dword ptr [g_is_trace_enabled], 0h
 	
 	mov esp, ebp
 	pop ebp

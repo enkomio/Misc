@@ -1,3 +1,6 @@
+g_random_multiplier dword 010101h
+g_random_adder dword 415927h
+
 ;
 ; generate a random number used to deobfuscate
 ; Parameters: address of the instruction to deobfuscate
@@ -7,9 +10,9 @@ gen_random proc
 	mov ebp, esp
 	
 	movzx eax, byte ptr [ebp+arg0]
-	mov edx, 010101h
+	mov edx, dword ptr [g_random_multiplier]
 	mul edx
-	add eax, 415927h
+	add eax, dword ptr [g_random_adder]
 
 	popcnt ecx, eax
 	test byte ptr [ebp+arg0], 1h

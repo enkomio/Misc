@@ -102,14 +102,16 @@ for i in range(start, end):
 			routines[index] = (0, routine)
 			break
 	else:
+		print("Do wrap")
 		for j in range(10):
 			(enabled, tmp_routine) = routines[j]
 			routines[j] = (1, tmp_routine)
 		(enabled, routine) = routines[type]
+		routines[type] = (0, routine)
 
 	obf_b = locals()[routine](cl[i], i)
-	print("Addr 0x%x, orig byte 0x%x, obfuscated byte 0x%x obfuscation routine: %s" % (v, cl[i], obf_b, routine))
-	cl[i] =  obf_b
+	print("Addr 0x%x (rand: 0x%x), orig byte 0x%x, obfuscated byte 0x%x obfuscation routine: %s" % (v, type, cl[i], obf_b, routine))
+	cl[i] = obf_b
 
 c = bytearray(cl)
 file = os.path.basename(sys.argv[1])

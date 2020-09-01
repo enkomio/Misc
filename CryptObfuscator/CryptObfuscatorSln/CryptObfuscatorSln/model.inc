@@ -25,6 +25,7 @@ local3 equ -10h
 ; marker to identify protected code
 marker_1 equ 1ce1c3bbh
 marker_2 equ 0c0deca05h
+shuffle_mark equ <dword marker_2, marker_2>
 start_protected_code_marker equ <dword marker_1, marker_2>
 end_protected_code_marker equ <dword marker_2, marker_1>
 
