@@ -20,10 +20,6 @@ You can find my previous crackme at:
 ; specify if the program must be traced
 g_is_trace_enabled dword 0h
 
-; bytes containing the content that will be overwritten by the trap handler enabled
-g_saved_code_address dword 0h
-g_saved_code byte 20h dup(0h)
-
 ; bytes containing the content that is encrypted and temporary decrypted for execution
 g_saved_encrypted_code_address dword 0h
 g_saved_encrypted_code byte 0Fh dup(0h)
@@ -45,56 +41,12 @@ include <obfuscation.inc>
 include <console.inc>
 include <validator.inc>
 
-enable_trap_flag macro		
-	pushfd
-	or word ptr [esp], 100h
-	popfd
-endm
-
 ;
-; compute how many bytes are the code to set the trap flag
-;
-enable_trap_flag_proc proc
-	enable_trap_flag
-enable_trap_flag_proc endp
-enable_trap_flag_proc_size equ $ - enable_trap_flag_proc
-
-;
-; Save bytes overwritten by trap flag enabler
-; Parameter: address to execute in single step mode
-;
-save_bytes proc
-	push ebp
-	mov ebp, esp
-
-	; save address
-	mov esi, dword ptr [ebp+arg0]
-	sub esi, enable_trap_flag_proc_size
-	mov g_saved_code_address, esi
-
-	; copy bytes
-	mem_copy esi, offset g_saved_code, enable_trap_flag_proc_size
-
-	mov esp, ebp
-	pop ebp
-	ret
-save_bytes endp
-
-;
-; restore bytes previously overwritten by trap flag enabler
+; restore bytes previously overwritten by decrypted code
 ;
 restore_bytes proc
 	push ebp
 	mov ebp, esp
-
-	; check if the data was set
-	mov edi, dword ptr [g_saved_code_address]
-	test edi, edi
-	jz @exit
-
-	; restore bytes overwritten by enable trap code
-	mem_copy offset g_saved_code, edi, enable_trap_flag_proc_size
-	mov dword ptr [g_saved_code_address], 0h
 
 	mov edi, dword ptr [g_saved_encrypted_code_address]
 	test edi, edi
@@ -111,29 +63,6 @@ restore_bytes proc
 restore_bytes endp
 
 ;
-; overwrite bytes with Trap flag enabler
-; Parameter: next address to execute in single step
-;
-set_trap_flag proc
-	push ebp
-	mov ebp, esp
-
-	; save overwirtten bytes
-	push dword ptr [ebp+arg0]
-	call save_bytes	
-
-	; write the single step enabler
-	mem_copy offset enable_trap_flag_proc, dword ptr [g_saved_code_address], enable_trap_flag_proc_size
-	
-	; exception handled
-	xor eax, eax
-
-	mov esp, ebp
-	pop ebp
-	ret
-set_trap_flag endp
-
-;
 ; handle the trap exception
 ; Parameter: CONTEXT
 ;
@@ -144,44 +73,30 @@ trap_handler proc
 	; replace previous instructions
 	call restore_bytes
 
-	; obtains the instruction causing the fault
+	; check if signel step is enabled
+	cmp dword ptr [g_is_trace_enabled], 0h
+	jz @exit
+
+	; set trap flag in CONTEXT again
+	mov eax, [ebp+arg0]
+	assume  eax: ptr CONTEXT
+	or dword ptr [eax].EFlags, 100h	
+		
+	; obtains the instruction address causing the fault
 	mov ebx, [ebp+arg0]
 	assume  ebx: ptr CONTEXT
 	mov eax, [ebx].rEip	
-	push eax
 
-	; write trap flag enabler and save the address of the overwritten bytes
-	cmp dword ptr [g_is_trace_enabled], 0h
-	jz @f
-	push eax
-	call set_trap_flag	
-
-@@:
-	; restore EIP value
-	pop eax
-
-	; verify that EIP is inside the protected range, if not does not decrypt	
+	; verify that the faulty EIP is inside the protected range, if not does not decrypt	
 	cmp eax, dword ptr [g_saved_start_protected_code]
-	jb @do_not_decrypt
+	jb @exit
 	cmp eax, dword ptr [g_saved_end_protected_code]
-	ja @do_not_decrypt		
+	ja @exit		
 
-	; decrypt code to execute
-	mov eax, [ebp+arg0]
-	assume  eax: ptr CONTEXT
-	push [eax].rEip
+	; decrypt the code that must be executed
+	push eax
 	call decrypt_code
-
-@do_not_decrypt:
-	cmp dword ptr [g_saved_code_address], 0h
-	je @exit
-
-	; modify context EIP to point to the trap flag enabler
-	mov ebx, [ebp+arg0]
-	assume  ebx: ptr CONTEXT
-	mov edx, dword ptr [g_saved_code_address]
-	mov dword ptr [ebx].rEip, edx	
-	
+			
 @exit:
 	xor eax, eax
 	mov esp, ebp
@@ -208,7 +123,6 @@ exception_handler proc
 
 @not_handled:
 	mov eax, 1
-	mov dword ptr [g_saved_code_address], 0h
 
 @exit:
 	mov esp, ebp
@@ -260,7 +174,9 @@ main proc
 
 	; enable trap flag and execute obfuscated code that is inside marks
 	mov dword ptr [g_is_trace_enabled], 1h
-	enable_trap_flag
+	pushfd
+	or word ptr [esp], 100h
+	popfd
 
 	; check the username/license values
 	push dword ptr [ebp+local1]

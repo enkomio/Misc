@@ -25,9 +25,11 @@ local3 equ -10h
 ; marker to identify protected code
 marker_1 equ 1ce1c3bbh
 marker_2 equ 0c0deca05h
+marker_3 equ 0deadc0deh
+marker_4 equ 0cafebabeh
 shuffle_mark equ <dword marker_2, marker_2>
-start_protected_code_marker equ <dword marker_1, marker_2>
-end_protected_code_marker equ <dword marker_2, marker_1>
+start_protected_code_marker equ <dword marker_1, marker_2, marker_3, marker_4>
+end_protected_code_marker equ <dword marker_4, marker_3, marker_2, marker_1>
 
 CONTEXT struct
 	ContextFlags		DWORD  ?	
@@ -44,7 +46,7 @@ CONTEXT struct
 	ErrorSelector	DWORD  ?
 	DataOffset		DWORD  ?
 	DataSelector	DWORD  ?
-	RegisterArea		dt 8 dup (?)
+	RegisterArea	dt 8 dup (?)
 	Cr0NpxState		DWORD  ?
 
 	SegGs			DWORD  ?
@@ -61,10 +63,10 @@ CONTEXT struct
 
 	rEbp			DWORD  ?	
 	rEip			DWORD  ?
-	SegCs		DWORD  ?
-	EFlags		DWORD  ?
+	SegCs			DWORD  ?
+	EFlags			DWORD  ?
 	rEsp			DWORD  ?
-	SegSs		DWORD  ?
+	SegSs			DWORD  ?
 
 	ExtendedRegisters	db 512 dup (?)
 CONTEXT ends
