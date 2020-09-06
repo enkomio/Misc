@@ -14,6 +14,7 @@ You can find my previous crackme at:
 .686
 .model flat, stdcall
 .stack 4096
+.xmm
 
 .data 
 
@@ -32,6 +33,16 @@ g_saved_end_protected_code dword 0h
 g_insert_license db "Please enter your license key: ", 0h
 g_insert_username db "Please enter your ID: ", 0h
 g_wrong_result db "The inserted license is not valid!", 0h
+
+g_ascii_num word 030h
+g_ascii_upper word 037h
+g_ascii_lower word 057h
+
+
+;;;;;;;;;;;;;;;;;;;;;;; TEST ;;;;;;;;;;;;;;;;;;;;;;;
+g_username db "username_used_for_test",0h
+g_license db "license_test_value",0h
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 .code
 
@@ -133,7 +144,7 @@ exception_handler endp
 main proc
 	push ebp
 	mov ebp, esp
-	max_input_length equ 20h
+	max_input_length equ 22h
 	sub esp, sizeof dword * 2
 
 	; make space for username and license
@@ -149,7 +160,7 @@ main proc
 
 	;push max_input_length
 	;push dword ptr [ebp+local0]
-	;call read_line
+	;call read_username
 	
 	; read license key
 	push offset [g_insert_license]
@@ -157,7 +168,9 @@ main proc
 
 	;push max_input_length
 	;push dword ptr [ebp+local1]
-	;call read_line	
+	;call read_lincese
+	;test eax, eax
+	;jnz @license_not_valid
 		
 	; unprotect all program memory
 	call unprotect_code
@@ -173,10 +186,17 @@ main proc
 	assume fs:error
 
 	; enable trap flag and execute obfuscated code that is inside marks
-	mov dword ptr [g_is_trace_enabled], 1h
-	pushfd
-	or word ptr [esp], 100h
-	popfd
+	;mov dword ptr [g_is_trace_enabled], 1h
+	;pushfd
+	;or word ptr [esp], 100h
+	;popfd
+
+	;;;;;;;;;;;;;;;;;;;;;;; TEST ;;;;;;;;;;;;;;;;;;;;;;;
+	mov eax, offset [g_username]
+	mov dword ptr [ebp+local0], eax
+	mov eax, offset [g_license]
+	mov dword ptr [ebp+local1], eax
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	; check the username/license values
 	push dword ptr [ebp+local1]
@@ -184,6 +204,12 @@ main proc
 	call check_input
 	mov dword ptr [g_is_trace_enabled], 0h
 	
+@license_not_valid:
+	push offset [g_wrong_result]
+	call print_line 
+	jmp @exit
+
+@exit:
 	mov esp, ebp
 	pop ebp
 	ret

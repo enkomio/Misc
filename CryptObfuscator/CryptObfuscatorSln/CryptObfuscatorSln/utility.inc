@@ -1,3 +1,17 @@
+strlen macro input
+	push edi
+	push eax
+	mov ecx, 0ffffh
+	mov edi, input
+	xor eax, eax
+	repnz scasb 
+	sub edi, input
+	dec edi
+	mov ecx, edi
+	pop eax
+	pop edi	
+endm
+
 ;
 ; Unprotect all program memory
 ;
