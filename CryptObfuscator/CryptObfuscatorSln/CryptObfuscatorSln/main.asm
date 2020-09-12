@@ -33,6 +33,7 @@ g_saved_end_protected_code dword 0h
 g_insert_license db "Please enter your license key: ", 0h
 g_insert_username db "Please enter your ID: ", 0h
 g_wrong_result db "The inserted license is not valid!", 0h
+g_license_separator db "-", 0h
 
 g_ascii_num word 030h
 g_ascii_upper word 037h
@@ -66,12 +67,14 @@ restore_bytes proc
 	; restore bytes temporarly decrypted
 	mem_copy offset g_saved_encrypted_code, dword ptr [g_saved_encrypted_code_address], sizeof g_saved_encrypted_code
 	mov dword ptr [g_saved_encrypted_code_address], 0h
-
+	
 @exit:
 	mov esp, ebp
 	pop ebp
 	ret
 restore_bytes endp
+
+
 
 ;
 ; handle the trap exception
@@ -154,23 +157,28 @@ main proc
 	sub esp, max_input_length
 	mov dword ptr [ebp+local1], esp
 
-	; read username
+	; initialize console
+	call init_console
+
+	; print username
 	push offset [g_insert_username]
 	call print_line
 
+	; read username
 	;push max_input_length
 	;push dword ptr [ebp+local0]
 	;call read_username
 	
-	; read license key
+	; print license key
 	push offset [g_insert_license]
 	call print_line
 
-	;push max_input_length
-	;push dword ptr [ebp+local1]
-	;call read_lincese
-	;test eax, eax
-	;jnz @license_not_valid
+	; read license key	
+	push max_input_length
+	push dword ptr [ebp+local1]
+	call read_lincese
+	test eax, eax
+	jnz @license_not_valid
 		
 	; unprotect all program memory
 	call unprotect_code

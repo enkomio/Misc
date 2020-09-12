@@ -5,6 +5,9 @@ CloseHandle proto, nStdHandle:dword
 GetStdHandle proto, nStdHandle:dword
 WriteConsoleA proto, hConsoleInput:dword, lpBuffer:ptr byte, nNumberOfCharsToWrite:dword, lpNumberOfCharsWritten:ptr dword, lpReserved:dword
 ReadConsoleA proto, hConsoleInput:dword, lpBuffer:ptr byte, nNumberOfCharsToRead:dword, lpNumberOfCharsRead:ptr dword, pInputControl:ptr dword
+SetConsoleMode proto, hConsoleHandle:dword, dwMode:dword
+GetConsoleMode proto, hConsoleHandle:dword, lpMode:ptr dword
+GetLastError proto
 
 EXCEPTION_SINGLE_STEP equ 80000004h
 PAGE_EXECUTE_READWRITE equ 00000040h

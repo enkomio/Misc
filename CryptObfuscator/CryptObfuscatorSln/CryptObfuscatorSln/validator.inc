@@ -68,6 +68,21 @@ compute_initialization_key proc
 compute_initialization_key endp
 
 ;
+; Set the initial state of the rubik cube
+; Parameter: init seed
+;
+initialize_cube proc
+	push ebp
+	mov ebp, esp	
+
+	; TODO
+
+	mov esp, ebp
+	pop ebp
+	ret 
+initialize_cube endp
+
+;
 ; Check the received username and license key
 ; Parameters: Username and license key
 ;
@@ -76,8 +91,12 @@ check_input proc
 	mov ebp, esp	
 
 	; compute initialization key
-	push dword ptr [ebp+arg0]
-	call compute_key
+	;push dword ptr [ebp+arg0]
+	;call compute_key
+
+	; set initial cube state
+	push eax
+	call initialize_cube
 
 	mov ecx, 0aaah
 	mov ebx, ecx
