@@ -55,8 +55,8 @@ endm
 ;	EBX: D1|D2|D3|A1
 ;	ECX: A2|A3|B1|B2
 ;	EDX: B3|C1|C2|C3
-shift_left_to_right_faces macro
-	; save D values
+shift_clockwise_faces macro
+	; save D1,D2,D3 values
 	read_value_address edx, position_3
 	movzx eax, byte ptr [eax]
 	push eax
@@ -102,9 +102,6 @@ shift_left_to_right_faces macro
 	pop edi
 	xchg eax, edi
 	mov byte ptr [edi], al
-
-	; restore edi
-	pop edi
 endm
 
 ;
@@ -122,7 +119,7 @@ endm
 ;	EBX: B1|B2|B3|C1
 ;	ECX: C2|C3|D1|D2
 ;	EDX: D3|A1|A2|A3
-shift_right_to_left_faces macro
+shift_counterclockwise_faces macro
 	; save A values
 	read_value_address ebx, position_4
 	movzx eax, byte ptr [eax]
@@ -169,9 +166,6 @@ shift_right_to_left_faces macro
 	pop edi
 	xchg eax, edi
 	mov byte ptr [edi], al
-
-	; restore edi
-	pop edi
 endm
 
 ;
@@ -233,9 +227,6 @@ rotate_clockwise_faces macro
 	pop edi
 	xchg eax, edi
 	mov byte ptr [edi], al
-
-	; restore edi
-	pop edi
 endm
 
 ;
@@ -297,9 +288,6 @@ rotate_counterclockwise_faces macro
 	pop edi
 	xchg eax, edi
 	mov byte ptr [edi], al
-
-	; restore edi
-	pop edi
 endm
 
 ; **********************************
@@ -320,6 +308,13 @@ move_F proc
 	mov esi, dword ptr [ebp+arg0]
 	rotate_clockwise_faces
 
+	; move lateral faces
+	mov ebx, 2a2b2c09h
+	mov ecx, 0c0f2f2eh
+	mov edx, 2d23201dh
+	mov esi, dword ptr [ebp+arg0]
+	shift_clockwise_faces
+
 	mov esp, ebp
 	pop ebp
 	ret
@@ -333,11 +328,19 @@ move_F_prime proc
 	push ebp
 	mov ebp, esp
 	
+	; move frontal faces
 	mov ebx, 00010203h
 	mov ecx, 04050607h
 	mov edx, 08000000h
 	mov esi, dword ptr [ebp+arg0]
 	rotate_counterclockwise_faces
+	
+	; move lateral faces
+	mov ebx, 2a2b2c09h
+	mov ecx, 0c0f2f2eh
+	mov edx, 2d23201dh
+	mov esi, dword ptr [ebp+arg0]
+	shift_counterclockwise_faces
 
 	mov esp, ebp
 	pop ebp
@@ -356,7 +359,7 @@ move_R proc
 	mov ecx, 29261215h
 	mov edx, 1835322fh
 	mov esi, dword ptr [ebp+arg0]
-	shift_left_to_right_faces
+	shift_clockwise_faces
 
 	mov esp, ebp
 	pop ebp
@@ -375,7 +378,7 @@ move_R_prime proc
 	mov ecx, 29261215h
 	mov edx, 1835322fh
 	mov esi, dword ptr [ebp+arg0]
-	shift_right_to_left_faces
+	shift_counterclockwise_faces
 
 	mov esp, ebp
 	pop ebp
