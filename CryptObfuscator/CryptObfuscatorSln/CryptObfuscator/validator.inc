@@ -2,6 +2,7 @@
 ; from addresses that are in the encrypted space.
 start_protected_code_marker
 
+include <rubik_vm.inc>
 
 ;
 ; Compute the initialization key to set the start state of rubik cube
@@ -70,13 +71,12 @@ compute_initialization_key endp
 ; generate a random number used to initialize rubik cube
 ; Parameters: seed
 ;
-gen_cube_face proc
+gen_cube_random proc
 	push ebp
 	mov ebp, esp
 	
 	mov edi, dword ptr [ebp+arg0]
 	mov eax, dword ptr [edi]
-
 
 	mov edx, 0f1h
 	mul edx
@@ -92,13 +92,51 @@ gen_cube_face proc
 	mov esp, ebp
 	pop ebp
 	ret
-gen_cube_face endp
+gen_cube_random endp
 
+;
+; Shuffle the cube faces
+; Parameter: init seed, cube faces buffer
+;
+shuffle_cube proc
+	push ebp
+	mov ebp, esp
+	
+	mov eax, dword ptr [ebp+arg0]
+	mov ebx, dword ptr [ebp+arg1]
+
+	;********************** TEST ********************
+	push dword ptr [ebp+arg1]
+	call move_R
+	add esp, 4
+
+	push dword ptr [ebp+arg1]
+	call move_F
+	add esp, 4
+
+	push dword ptr [ebp+arg1]
+	call move_F_prime
+	add esp, 4
+
+	push dword ptr [ebp+arg1]
+	call move_R
+	add esp, 4
+
+	push dword ptr [ebp+arg1]
+	call move_R
+	add esp, 4
+
+	mov esp, ebp
+	pop ebp
+	ret
+shuffle_cube endp
+
+;********************** FORSE INUTILE *****************************
 ;
 ; Set the initial state of the rubik cube
 ; Parameter: init seed, cube faces buffer
 ;
-initialize_cube proc
+set_cube_state proc
 	push ebp
 	mov ebp, esp	
 	sub esp, 3 * sizeof dword
@@ -106,6 +144,14 @@ initialize_cube proc
 	; read initial seed and number
 	mov eax, dword ptr [ebp+arg0]
 	mov dword ptr [ebp+local0], eax
+
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	; TODO: generate a random move (call gen_cube_random with parameter, remove the hardcoded mov ebx, 6h.)
+	; for each random move apply it to the cube. Do this for a lot of moves. When finished that will
+	; be the initial cube state. To check cube do a XOR with each color on each face...
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	; make space to keep track about how many colors we already set
 	sub esp, sizeof dword * 2
@@ -122,7 +168,7 @@ initialize_cube proc
 @@:
 	lea edi, [ebp+local0]
 	push edi
-	call gen_cube_face
+	call gen_cube_random
 	pop edi
 
 	; check if we reached the max for this number/color
@@ -150,7 +196,8 @@ initialize_cube proc
 	mov esp, ebp
 	pop ebp
 	ret 
-initialize_cube endp
+set_cube_state endp
+;*************************************************************
 
 ;
 ; Check the received username and license key
@@ -159,22 +206,40 @@ initialize_cube endp
 check_input proc
 	push ebp
 	mov ebp, esp	
-	sub esp, sizeof dword
-
-	; compute initialization key
-	push dword ptr [ebp+arg0]
-	call compute_initialization_key
+	sub esp, sizeof dword	
 
 	; space for cube faces
 	sub esp, 36h
 	mov dword ptr [ebp+local0], esp
 
-	; set initial cube state
-	push esp
-	push eax
-	call initialize_cube
+	; set cube initial state
+	mov ecx, 36h
+	xor ebx, ebx
+@@:
+	; compute current color
+	mov eax, ecx
+	xor edx, edx
+	mov edi, 9h
+	div edi
+	test edx, edx
+	jnz @write_color
+	inc ebx
 
-	mov eax, dword ptr [ebp+local0]
+@write_color:
+	mov esi, ecx
+	lea esi, [esi+esp-1]
+	mov byte ptr [esi], bl
+	loop @b
+
+	; compute initialization key
+	push dword ptr [ebp+arg0]
+	call compute_initialization_key
+	add esp, 4
+
+	; generate random cube state
+	push dword ptr [ebp+local0]
+	push eax
+	call shuffle_cube
 
 	mov ecx, 0aaah
 	mov ebx, ecx

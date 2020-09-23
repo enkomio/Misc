@@ -205,7 +205,7 @@ check_license_format proc
 	mov esi, dword ptr [ebp+arg0]
 @@:
 	lodsb
-	cmp al, 0fh
+	cmp al, 12h
 	ja @error
 	loop @b
 	xor eax, eax

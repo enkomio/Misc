@@ -52,7 +52,6 @@ include <utility.inc>
 include <obfuscation.inc>
 include <console.inc>
 include <validator.inc>
-include <rubik_vm.inc>
 
 ;
 ; restore bytes previously overwritten by decrypted code
@@ -166,22 +165,22 @@ main proc
 	call print_line
 
 	; read username
-	push max_input_length
-	sub dword ptr [esp], 1
-	push dword ptr [ebp+local0]
-	call read_username
+	;push max_input_length
+	;sub dword ptr [esp], 1
+	;push dword ptr [ebp+local0]
+	;call read_username
 	
 	; print license key
 	push offset [g_insert_license]
 	call print_line
 
 	; read license key	
-	push max_input_length
-	sub dword ptr [esp], 1
-	push dword ptr [ebp+local1]
-	call read_lincese
-	test eax, eax
-	jnz @license_not_valid
+	;push max_input_length
+	;sub dword ptr [esp], 1
+	;push dword ptr [ebp+local1]
+	;call read_lincese
+	;test eax, eax
+	;jnz @license_not_valid
 		
 	; unprotect all program memory
 	call unprotect_code
