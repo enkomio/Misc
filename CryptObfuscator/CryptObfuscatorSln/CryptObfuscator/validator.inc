@@ -110,21 +110,15 @@ shuffle_cube proc
 	call move_R
 	add esp, 4
 
+	;;;;;;;;;;;;;; APPLY MOVE TO TEST
 	push dword ptr [ebp+arg1]
-	call move_F
+	call move_L
 	add esp, 4
 
 	push dword ptr [ebp+arg1]
-	call move_F_prime
+	call move_L_prime
 	add esp, 4
 
-	push dword ptr [ebp+arg1]
-	call move_R
-	add esp, 4
-
-	push dword ptr [ebp+arg1]
-	call move_R
-	add esp, 4
 
 	mov esp, ebp
 	pop ebp

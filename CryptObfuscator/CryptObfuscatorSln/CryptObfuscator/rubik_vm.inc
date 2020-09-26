@@ -361,6 +361,12 @@ move_R proc
 	mov esi, dword ptr [ebp+arg0]
 	shift_clockwise_faces
 
+	mov ebx, 090a0b0ch
+	mov ecx, 0d0e0f10h
+	mov edx, 11000000h
+	mov esi, dword ptr [ebp+arg0]
+	rotate_clockwise_faces
+
 	mov esp, ebp
 	pop ebp
 	ret
@@ -380,7 +386,115 @@ move_R_prime proc
 	mov esi, dword ptr [ebp+arg0]
 	shift_counterclockwise_faces
 
+	; move frontal faces
+	mov ebx, 090a0b0ch
+	mov ecx, 0d0e0f10h
+	mov edx, 11000000h
+	mov esi, dword ptr [ebp+arg0]
+	rotate_counterclockwise_faces
+
 	mov esp, ebp
 	pop ebp
 	ret
 move_R_prime endp
+
+;
+; U move
+; Parameters: cube buffer
+;
+move_U proc
+	push ebp
+	mov ebp, esp
+		
+	mov ebx, 00010209h
+	mov ecx, 0a0b1213h
+	mov edx, 141b1c1dh
+	mov esi, dword ptr [ebp+arg0]
+	shift_counterclockwise_faces
+
+	; move frontal faces
+	mov ebx, 24252627h
+	mov ecx, 28292a2bh
+	mov edx, 2c000000h
+	mov esi, dword ptr [ebp+arg0]
+	rotate_counterclockwise_faces
+
+	mov esp, ebp
+	pop ebp
+	ret
+move_U endp
+
+;
+; U' move
+; Parameters: cube buffer
+;
+move_U_prime proc
+	push ebp
+	mov ebp, esp
+		
+	mov ebx, 00010209h
+	mov ecx, 0a0b1213h
+	mov edx, 141b1c1dh
+	mov esi, dword ptr [ebp+arg0]
+	shift_clockwise_faces
+
+	mov ebx, 24252627h
+	mov ecx, 28292a2bh
+	mov edx, 2c000000h
+	mov esi, dword ptr [ebp+arg0]
+	rotate_clockwise_faces
+
+	mov esp, ebp
+	pop ebp
+	ret
+move_U_prime endp
+
+;
+; L move
+; Parameters: cube buffer
+;
+move_L proc
+	push ebp
+	mov ebp, esp
+
+	mov ebx, 0603002ah
+	mov ecx, 27241417h
+	mov edx, 1a33302dh
+	mov esi, dword ptr [ebp+arg0]
+	shift_counterclockwise_faces
+
+	mov ebx, 1b1c1d1eh
+	mov ecx, 1f202122h
+	mov edx, 23000000h
+	mov esi, dword ptr [ebp+arg0]
+	rotate_counterclockwise_faces
+
+	mov esp, ebp
+	pop ebp
+	ret
+move_L endp
+
+;
+; L' move
+; Parameters: cube buffer
+;
+move_L_prime proc
+	push ebp
+	mov ebp, esp
+
+	mov ebx, 0603002ah
+	mov ecx, 27241417h
+	mov edx, 1a33302dh
+	mov esi, dword ptr [ebp+arg0]
+	shift_clockwise_faces
+
+	mov ebx, 1b1c1d1eh
+	mov ecx, 1f202122h
+	mov edx, 23000000h
+	mov esi, dword ptr [ebp+arg0]
+	rotate_clockwise_faces
+
+	mov esp, ebp
+	pop ebp
+	ret
+move_L_prime endp
