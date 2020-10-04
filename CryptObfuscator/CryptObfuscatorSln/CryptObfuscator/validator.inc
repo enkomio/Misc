@@ -120,7 +120,7 @@ shuffle_cube proc
 	add esp, 4
 
 	push dword ptr [ebp+arg1]
-	call move_L
+	call move_L_prime
 	add esp, 4
 
 	mov esp, ebp

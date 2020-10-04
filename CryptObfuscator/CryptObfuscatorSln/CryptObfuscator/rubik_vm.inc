@@ -55,7 +55,7 @@ endm
 ;	EBX: D1|D2|D3|A1
 ;	ECX: A2|A3|B1|B2
 ;	EDX: B3|C1|C2|C3
-shift_clockwise_faces macro
+shift_right_faces macro
 	; save D3,D2,D1 values
 	read_value_address edx, position_1
 	movzx eax, byte ptr [eax]
@@ -82,22 +82,19 @@ shift_clockwise_faces macro
 	move_value ebx, position_3, ecx, position_4
 	move_value ebx, position_2, ecx, position_3
 
-	; move D1,D2,D3 -> A1,A2,A3 (saved D values)
-	push edi
-
-	; write D1
+	; D1 (saved) -> A1
 	read_value_address ebx, position_4
 	pop edi
 	xchg eax, edi	
 	mov byte ptr [edi], al
 
-	; write D2
+	; D2 (saved) -> A2
 	read_value_address ebx, position_3
 	pop edi
 	xchg eax, edi	
 	mov byte ptr [edi], al
 
-	; write D3
+	; D3 (saved) -> A3
 	read_value_address ebx, position_2
 	pop edi
 	xchg eax, edi
@@ -119,15 +116,15 @@ endm
 ;	EBX: B1|B2|B3|C1
 ;	ECX: C2|C3|D1|D2
 ;	EDX: D3|A1|A2|A3
-shift_counterclockwise_faces macro
-	; save A values
-	read_value_address ebx, position_4
+shift_left_faces macro
+	; save A3,A2,A1 values
+	read_value_address ebx, position_2
 	movzx eax, byte ptr [eax]
 	push eax
 	read_value_address ebx, position_3
 	movzx eax, byte ptr [eax]
 	push eax
-	read_value_address ebx, position_2
+	read_value_address ebx, position_1
 	movzx eax, byte ptr [eax]
 	push eax
 
@@ -146,22 +143,19 @@ shift_counterclockwise_faces macro
 	move_value edx, position_2, ecx, position_1
 	move_value edx, position_1, edx, position_4
 
-	; move A -> D (saved A values to D)
-	push edi
-
-	; write A1
+	; A1 (saved) -> D1
 	read_value_address edx, position_3
 	pop edi
 	xchg eax, edi	
 	mov byte ptr [edi], al
 
-	; write A2
+	; A2 (saved) -> D2
 	read_value_address edx, position_2
 	pop edi
 	xchg eax, edi	
 	mov byte ptr [edi], al
 
-	; write A3
+	; A3 (saved) -> D3
 	read_value_address edx, position_1
 	pop edi
 	xchg eax, edi
@@ -184,14 +178,14 @@ endm
 ;	ECX: B2|A2|C3|B3
 ;	EDX: A3|XX|XX|XX
 rotate_clockwise_faces macro	
-	; save A3,C3,B3 values
-	read_value_address ebx, position_2
+	; save B3,C3,A3 values
+	read_value_address ecx, position_3
 	movzx eax, byte ptr [eax]
 	push eax
 	read_value_address edx, position_4
 	movzx eax, byte ptr [eax]
 	push eax
-	read_value_address ecx, position_3
+	read_value_address ebx, position_2
 	movzx eax, byte ptr [eax]
 	push eax	
 
@@ -245,14 +239,14 @@ endm
 ;	ECX: B2|C2|A1|B1
 ;	EDX: C1|XX|XX|XX
 rotate_counterclockwise_faces macro
-	; save C1,C3,C2 values
-	read_value_address ecx, position_2
+	; save C2,C3,C1 values
+	read_value_address ecx, position_1
 	movzx eax, byte ptr [eax]
 	push eax
 	read_value_address edx, position_4
 	movzx eax, byte ptr [eax]
 	push eax
-	read_value_address ecx, position_1
+	read_value_address ecx, position_2
 	movzx eax, byte ptr [eax]
 	push eax	
 
@@ -313,7 +307,7 @@ move_F proc
 	mov ecx, 0c0f2f2eh
 	mov edx, 2d23201dh
 	mov esi, dword ptr [ebp+arg0]
-	shift_clockwise_faces
+	shift_right_faces
 
 	mov esp, ebp
 	pop ebp
@@ -340,7 +334,7 @@ move_F_prime proc
 	mov ecx, 0c0f2f2eh
 	mov edx, 2d23201dh
 	mov esi, dword ptr [ebp+arg0]
-	shift_counterclockwise_faces
+	shift_left_faces
 
 	mov esp, ebp
 	pop ebp
@@ -359,7 +353,7 @@ move_R proc
 	mov ecx, 29261215h
 	mov edx, 1835322fh
 	mov esi, dword ptr [ebp+arg0]
-	shift_clockwise_faces
+	shift_right_faces
 
 	mov ebx, 090a0b0ch
 	mov ecx, 0d0e0f10h
@@ -384,7 +378,7 @@ move_R_prime proc
 	mov ecx, 29261215h
 	mov edx, 1835322fh
 	mov esi, dword ptr [ebp+arg0]
-	shift_counterclockwise_faces
+	shift_left_faces
 
 	; move frontal faces
 	mov ebx, 090a0b0ch
@@ -410,14 +404,14 @@ move_U proc
 	mov ecx, 0a0b1213h
 	mov edx, 141b1c1dh
 	mov esi, dword ptr [ebp+arg0]
-	shift_counterclockwise_faces
+	shift_left_faces
 
 	; move frontal faces
 	mov ebx, 24252627h
 	mov ecx, 28292a2bh
 	mov edx, 2c000000h
 	mov esi, dword ptr [ebp+arg0]
-	rotate_counterclockwise_faces
+	rotate_clockwise_faces
 
 	mov esp, ebp
 	pop ebp
@@ -436,13 +430,13 @@ move_U_prime proc
 	mov ecx, 0a0b1213h
 	mov edx, 141b1c1dh
 	mov esi, dword ptr [ebp+arg0]
-	shift_clockwise_faces
+	shift_right_faces
 
 	mov ebx, 24252627h
 	mov ecx, 28292a2bh
 	mov edx, 2c000000h
 	mov esi, dword ptr [ebp+arg0]
-	rotate_clockwise_faces
+	rotate_counterclockwise_faces
 
 	mov esp, ebp
 	pop ebp
@@ -461,13 +455,13 @@ move_L proc
 	mov ecx, 27241417h
 	mov edx, 1a33302dh
 	mov esi, dword ptr [ebp+arg0]
-	shift_counterclockwise_faces
+	shift_left_faces
 
-	mov ebx, 1b1c1d1eh
-	mov ecx, 1f202122h
-	mov edx, 23000000h
+	mov ebx, 1d20231ch	
+	mov ecx, 1f221b1eh
+	mov edx, 21000000h
 	mov esi, dword ptr [ebp+arg0]
-	rotate_counterclockwise_faces
+	rotate_clockwise_faces
 
 	mov esp, ebp
 	pop ebp
@@ -486,13 +480,13 @@ move_L_prime proc
 	mov ecx, 27241417h
 	mov edx, 1a33302dh
 	mov esi, dword ptr [ebp+arg0]
-	shift_clockwise_faces
+	shift_right_faces
 
-	mov ebx, 1b1c1d1eh
-	mov ecx, 1f202122h
-	mov edx, 23000000h
+	mov ebx, 1d20231ch	
+	mov ecx, 1f221b1eh
+	mov edx, 21000000h
 	mov esi, dword ptr [ebp+arg0]
-	rotate_clockwise_faces
+	rotate_counterclockwise_faces
 
 	mov esp, ebp
 	pop ebp
