@@ -56,33 +56,33 @@ endm
 ;	ECX: A2|A3|B1|B2
 ;	EDX: B3|C1|C2|C3
 shift_clockwise_faces macro
-	; save D1,D2,D3 values
-	read_value_address edx, position_3
+	; save D3,D2,D1 values
+	read_value_address edx, position_1
 	movzx eax, byte ptr [eax]
 	push eax
 	read_value_address edx, position_2
 	movzx eax, byte ptr [eax]
 	push eax
-	read_value_address edx, position_1
+	read_value_address edx, position_3
 	movzx eax, byte ptr [eax]
 	push eax
 
-	; move C -> D
+	; move C1,C2,C3 -> D1,D2,D3
 	move_value ecx, position_2, edx, position_3
 	move_value ecx, position_1, edx, position_2
 	move_value edx, position_4, edx, position_1
 
-	; move B -> C
+	; move B1,B2,B3 -> C1,C2,C3
 	move_value ebx, position_1, ecx, position_2
 	move_value ecx, position_4, ecx, position_1
 	move_value ecx, position_3, edx, position_4
 
-	; move A -> B
+	; move A1,A2,A3 -> B1,B2,B3
 	move_value ebx, position_4, ebx, position_1
 	move_value ebx, position_3, ecx, position_4
 	move_value ebx, position_2, ecx, position_3
 
-	; move D -> A (saved D values to A)
+	; move D1,D2,D3 -> A1,A2,A3 (saved D values)
 	push edi
 
 	; write D1

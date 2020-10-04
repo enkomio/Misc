@@ -39,6 +39,8 @@ g_ascii_num word 030h
 g_ascii_upper word 037h
 g_ascii_lower word 057h
 
+g_cube_color db "ywobrg"
+
 
 ;;;;;;;;;;;;;;;;;;;;;;; TEST ;;;;;;;;;;;;;;;;;;;;;;;
 g_username db "username_used_for_test",0h

@@ -112,13 +112,16 @@ shuffle_cube proc
 
 	;;;;;;;;;;;;;; APPLY MOVE TO TEST
 	push dword ptr [ebp+arg1]
-	call move_L
+	call move_F
 	add esp, 4
 
 	push dword ptr [ebp+arg1]
-	call move_L_prime
+	call move_U_prime
 	add esp, 4
 
+	push dword ptr [ebp+arg1]
+	call move_L
+	add esp, 4
 
 	mov esp, ebp
 	pop ebp
@@ -208,7 +211,7 @@ check_input proc
 
 	; set cube initial state
 	mov ecx, 36h
-	xor ebx, ebx
+	mov ebx, 0ffffffffh
 @@:
 	; compute current color
 	mov eax, ecx
@@ -222,7 +225,8 @@ check_input proc
 @write_color:
 	mov esi, ecx
 	lea esi, [esi+esp-1]
-	mov byte ptr [esi], bl
+	mov al, byte ptr [g_cube_color + ebx]
+	mov byte ptr [esi], al
 	loop @b
 
 	; compute initialization key
