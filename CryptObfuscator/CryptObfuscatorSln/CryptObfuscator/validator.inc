@@ -1,8 +1,4 @@
-; start protected code. The code running under this mode, cannot read "code" or "data"
-; from addresses that are in the encrypted space.
-start_protected_code_marker
-
-include <rubik_vm.inc>
+include <rubik_cube.inc>
 
 ;
 ; Compute the initialization key to set the start state of rubik cube
@@ -120,7 +116,7 @@ shuffle_cube proc
 	add esp, 4
 
 	push dword ptr [ebp+arg1]
-	call move_L_prime
+	call move_B
 	add esp, 4
 
 	mov esp, ebp
@@ -250,4 +246,3 @@ check_input proc
 	pop ebp
 	ret
 check_input endp
-end_protected_code_marker

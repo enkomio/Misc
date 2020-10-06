@@ -124,7 +124,7 @@ shift_left_faces macro
 	read_value_address ebx, position_3
 	movzx eax, byte ptr [eax]
 	push eax
-	read_value_address ebx, position_1
+	read_value_address ebx, position_4
 	movzx eax, byte ptr [eax]
 	push eax
 
@@ -492,3 +492,105 @@ move_L_prime proc
 	pop ebp
 	ret
 move_L_prime endp
+
+;
+; D move
+; Parameters: cube buffer
+;
+move_D proc
+	push ebp
+	mov ebp, esp
+
+	mov ebx, 0607080fh
+	mov ecx, 10111819h
+	mov edx, 1a212223h
+	mov esi, dword ptr [ebp+arg0]
+	shift_right_faces
+
+	mov ebx, 2d2e2f30h
+	mov ecx, 31323334h
+	mov edx, 35000000h
+	mov esi, dword ptr [ebp+arg0]
+	rotate_clockwise_faces
+
+	mov esp, ebp
+	pop ebp
+	ret
+move_D endp
+
+;
+; D' move
+; Parameters: cube buffer
+;
+move_D_prime proc
+	push ebp
+	mov ebp, esp
+
+	mov ebx, 0607080fh
+	mov ecx, 10111819h
+	mov edx, 1a212223h
+	mov esi, dword ptr [ebp+arg0]
+	shift_left_faces
+
+	mov ebx, 2d2e2f30h
+	mov ecx, 31323334h
+	mov edx, 35000000h
+	mov esi, dword ptr [ebp+arg0]
+	rotate_counterclockwise_faces
+
+	mov esp, ebp
+	pop ebp
+	ret
+move_D_prime endp
+
+;
+; B move
+; Parameters: cube buffer
+;
+move_B proc
+	push ebp
+	mov ebp, esp
+
+	mov ebx, 14131217h
+	mov ecx, 16151a19h
+	mov edx, 18000000h
+	mov esi, dword ptr [ebp+arg0]
+	rotate_counterclockwise_faces
+
+	; move lateral faces
+	mov ebx, 26252411h
+	mov ecx, 0e0b3334h
+	mov edx, 351b1e21h
+	mov esi, dword ptr [ebp+arg0]
+	shift_left_faces
+
+	mov esp, ebp
+	pop ebp
+	ret
+move_B endp
+
+;
+; B' move
+; Parameters: cube buffer
+;
+move_B_prime proc
+	push ebp
+	mov ebp, esp
+
+	mov ebx, 14131217h
+	mov ecx, 16151a19h
+	mov edx, 18000000h
+	mov esi, dword ptr [ebp+arg0]
+	rotate_clockwise_faces
+
+	; move lateral faces
+	mov ebx, 26252411h
+	mov ecx, 0e0b3334h
+	mov edx, 351b1e21h
+	mov esi, dword ptr [ebp+arg0]
+	shift_right_faces
+
+	mov esp, ebp
+	pop ebp
+	ret
+move_B_prime endp
