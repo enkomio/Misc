@@ -53,7 +53,12 @@ include <model.inc>
 include <utility.inc>
 include <obfuscation.inc>
 include <console.inc>
+
+; start protected code. The code running under this mode, cannot read "code" or "data"
+; from addresses that are in the encrypted space.
+start_protected_code_marker
 include <validator.inc>
+end_protected_code_marker
 
 ;
 ; restore bytes previously overwritten by decrypted code
