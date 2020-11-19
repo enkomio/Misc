@@ -50,7 +50,7 @@ main proc
 	; set func call
 	lea edi, [offset func_a]
 	
-	; this code can be optimized, but I prefered to code it like that for the decompiler to show a clear "for" loop
+	; this code can be optimized, but I prefered to code it in this way for the decompiler, to show a clean "for" loop
 	mov dword ptr [ebp-4], 0
 @@:	
 	mov ecx, dword ptr [ebp-4]
