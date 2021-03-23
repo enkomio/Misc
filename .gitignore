@@ -15,6 +15,7 @@ fake/
 *.obj
 *.elf
 *.cache
+*.safe
 
 # Linker output
 *.ilk
