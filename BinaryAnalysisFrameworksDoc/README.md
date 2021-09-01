@@ -47,9 +47,9 @@ This page is just a list fo available binary analysis frameworks. The idea come 
 * Language: Ruby - x86 (16 and 32bits), X86_64, MIPS, PowerPC, Sh4
 * GitHub: https://github.com/jjyg/metasm
 
-### Binary Ninja IR:
-* Language: C++, Python bindings
-* https://api.binary.ninja/binaryninja.LowLevelILExpr.html
+### Binary Ninja IL (BNIL):
+* Language: C++, Python, Rust bindings
+* https://docs.binary.ninja/dev/bnil-overview.html
 
 ### Triton IR:
 * Language: C/C++, Python bindings - x86, x86_64
