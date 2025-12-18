@@ -3,6 +3,9 @@ A repository with simple projects created for testing/learning purpose.
 
 ## Current projects
 
+### Code Injection Via Thread Pool
+[Process Injection via Thread Pol Wait](https://github.com/enkomio/Misc/tree/master/CodeInjection)
+
 ### Messing with Hex-Rays decompiler
 A <a href="https://github.com/enkomio/Misc/tree/master/Hex-Rays">simple project</a> that shows that putting a total trust in the decompiled code isn't always a good idea. Tested with Hex-Rays decompiler.
 
